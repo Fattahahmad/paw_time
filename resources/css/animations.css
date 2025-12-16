@@ -1,0 +1,68 @@
+/* ===================================
+   ANIMATIONS & DECORATIVE ELEMENTS
+   =================================== */
+
+/* Background & Decorations */
+.gradient-bg {
+    background: linear-gradient(135deg, #FFD4B2 0%, #FFF5EE 50%, #E8F4F8 100%);
+}
+
+.paw-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+    z-index: 0;
+}
+
+.paw-1 {
+    width: 200px;
+    height: 200px;
+    background: #FFD4B2;
+    top: -50px;
+    left: -50px;
+}
+
+.paw-2 {
+    width: 300px;
+    height: 300px;
+    background: #FFE8D6;
+    bottom: -100px;
+    left: 10%;
+}
+
+.paw-3 {
+    width: 250px;
+    height: 250px;
+    background: #D4F1F4;
+    top: 100px;
+    right: -80px;
+}
+
+/* Float Animation */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.hero-image {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Bubble Animation */
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    animation: bubble-float 4s ease-in-out infinite;
+}
+
+@keyframes bubble-float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-30px);
+    }
+}

@@ -1,0 +1,242 @@
+/* ===================================
+   BUTTON COMPONENTS
+   =================================== */
+
+/* Primary Button */
+.btn-primary {
+  background: #68C4CF;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #5AB0BB;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(104, 196, 207, 0.3);
+}
+
+/* White Button */
+.btn-white {
+  background: #FFFFFF;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-white:hover {
+  background: #f8f5f2;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(104, 196, 207, 0.3);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #68C4CF;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #68C4CF;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ===================================
+   CARD COMPONENTS
+   =================================== */
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================================
+   FEATURE & ICON STYLES
+   =================================== */
+
+.feature-icon {
+  background: linear-gradient(135deg, #FFD4B2 0%, #FFA07A 100%);
+}
+
+/* ===================================
+   NAVIGATION STYLES
+   =================================== */
+
+.nav-link {
+  position: relative;
+  transition: color 0.3s ease;
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background: #68C4CF;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ===================================
+   SOCIAL ICON COMPONENT
+   =================================== */
+
+.social-icon {
+  transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
+}
+
+.social-icon:hover {
+  transform: scale(1.1);
+}
+
+/* ===================================
+   CTA SECTION
+   =================================== */
+
+.cta-section {
+  background: linear-gradient(to right, #68C4CF, #5AB0BB) !important;
+  border-radius: 1.5rem;
+  padding: 3rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .cta-section h2 {
+    font-size: 3rem;
+  }
+}
+
+.cta-section p {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-custom-btn {
+  background: #FFFFFF !important;
+  color: #68C4CF !important;
+}
+
+.cta-custom-btn:hover {
+  background: #f0f0f0 !important;
+  transform: scale(1.05) !important;
+}
+
+/* ===================================
+   FORM & AUTH COMPONENTS
+   =================================== */
+
+.input-field {
+  transition: all 0.3s ease;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #68C4CF;
+  box-shadow: 0 0 0 3px rgba(104, 196, 207, 0.1);
+}
+
+.icon-wrapper {
+  color: #9CA3AF;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.password-toggle {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #68C4CF;
+}
+
+.auth-card {
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  color: #68C4CF;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #68C4CF;
+  border-radius: 3px;
+}
+
+.btn-google {
+  background: white;
+  border: 2px solid #E5E7EB;
+  transition: all 0.3s ease;
+}
+
+.btn-google:hover {
+  border-color: #68C4CF;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.show {
+  display: block !important;
+}
+
+.hide {
+  display: none !important;
+}
