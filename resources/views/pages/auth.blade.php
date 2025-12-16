@@ -15,11 +15,7 @@
         <!-- Logo Header -->
         <div class="text-center mb-8">
             <div class="flex justify-center mb-4">
-                @include('components.icon', [
-                    'name' => 'paw',
-                    'size' => 'w-12 h-12',
-                    'color' => '#FF8C42',
-                ])
+                <x-ui.icon name="paw" size="w-12 h-12" color="#FF8C42" />
             </div>
             <h1 class="text-3xl font-bold text-gray-800">Paw Time</h1>
             <p class="text-gray-600 mt-2">Take Care Of Your Pet</p>
@@ -28,10 +24,7 @@
         <!-- Auth Card -->
         <div class="auth-card bg-white rounded-3xl shadow-2xl p-8">
             <!-- Tabs -->
-            @include('components.tab-switch', [
-                'tabs' => [['id' => 'login', 'label' => 'Sign In'], ['id' => 'register', 'label' => 'Sign Up']],
-                'activeTab' => 'login',
-            ])
+            <x-ui.tab-switch :tabs="[['id' => 'login', 'label' => 'Sign In'], ['id' => 'register', 'label' => 'Sign Up']]" activeTab="login" />
 
             <!-- Login Form -->
             <div id="loginForm" class="show">
@@ -39,24 +32,11 @@
                 <p class="text-gray-600 mb-6">Sign in to continue caring for your pet</p>
 
                 <form class="space-y-5">
-                    @include('components.form-input', [
-                        'label' => 'Email',
-                        'type' => 'email',
-                        'placeholder' => 'yourname@email.com',
-                        'icon' => 'email',
-                        'id' => 'loginEmail',
-                        'required' => true,
-                    ])
+                    <x-ui.form-input label="Email" type="email" placeholder="yourname@email.com" icon="email"
+                        id="loginEmail" :required="true" />
 
-                    @include('components.form-input', [
-                        'label' => 'Password',
-                        'type' => 'password',
-                        'placeholder' => '••••••••',
-                        'icon' => 'password',
-                        'id' => 'loginPassword',
-                        'passwordToggleId' => true,
-                        'required' => true,
-                    ])
+                    <x-ui.form-input label="Password" type="password" placeholder="••••••••" icon="password"
+                        id="loginPassword" :passwordToggleId="true" :required="true" />
 
                     <div class="flex items-center justify-between text-sm">
                         <label class="flex items-center cursor-pointer">
@@ -67,12 +47,7 @@
                         <a href="#" class="text-[#68C4CF] font-semibold hover:text-[#5AB0BB]">Forgot Password?</a>
                     </div>
 
-                    @include('components.button', [
-                        'text' => 'Sign In',
-                        'type' => 'primary',
-                        'size' => 'md',
-                        'class' => 'w-full py-4',
-                    ])
+                    <x-ui.button text="Sign In" type="primary" size="md" class="w-full py-4" />
 
                     <!-- Divider -->
                     <div class="relative my-6">
@@ -108,43 +83,17 @@
                 <p class="text-gray-600 mb-6">Join us to start caring for your pet</p>
 
                 <form class="space-y-5">
-                    @include('components.form-input', [
-                        'label' => 'Full Name',
-                        'type' => 'text',
-                        'placeholder' => 'John Doe',
-                        'icon' => 'user',
-                        'id' => 'fullName',
-                        'required' => true,
-                    ])
+                    <x-ui.form-input label="Full Name" type="text" placeholder="John Doe" icon="user" id="fullName"
+                        :required="true" />
 
-                    @include('components.form-input', [
-                        'label' => 'Email',
-                        'type' => 'email',
-                        'placeholder' => 'yourname@email.com',
-                        'icon' => 'email',
-                        'id' => 'registerEmail',
-                        'required' => true,
-                    ])
+                    <x-ui.form-input label="Email" type="email" placeholder="yourname@email.com" icon="email"
+                        id="registerEmail" :required="true" />
 
-                    @include('components.form-input', [
-                        'label' => 'Password',
-                        'type' => 'password',
-                        'placeholder' => '••••••••',
-                        'icon' => 'password',
-                        'id' => 'registerPassword',
-                        'passwordToggleId' => true,
-                        'required' => true,
-                    ])
+                    <x-ui.form-input label="Password" type="password" placeholder="••••••••" icon="password"
+                        id="registerPassword" :passwordToggleId="true" :required="true" />
 
-                    @include('components.form-input', [
-                        'label' => 'Confirm Password',
-                        'type' => 'password',
-                        'placeholder' => '••••••••',
-                        'icon' => 'password',
-                        'id' => 'confirmPassword',
-                        'passwordToggleId' => true,
-                        'required' => true,
-                    ])
+                    <x-ui.form-input label="Confirm Password" type="password" placeholder="••••••••" icon="password"
+                        id="confirmPassword" :passwordToggleId="true" :required="true" />
 
                     <div class="flex items-center">
                         <input type="checkbox" class="w-4 h-4 text-[#68C4CF] border-gray-300 rounded focus:ring-[#68C4CF]">
@@ -152,12 +101,7 @@
                                 class="text-[#68C4CF] font-semibold hover:text-[#5AB0BB]">Terms & Conditions</a></span>
                     </div>
 
-                    @include('components.button', [
-                        'text' => 'Create Account',
-                        'type' => 'primary',
-                        'size' => 'md',
-                        'class' => 'w-full py-4',
-                    ])
+                    <x-ui.button text="Create Account" type="primary" size="md" class="w-full py-4" />
 
                     <!-- Google Button -->
                     <button type="button"

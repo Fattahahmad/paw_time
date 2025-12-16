@@ -30,21 +30,9 @@
                 <div>
                     <h4 class="font-bold text-gray-800 mb-4">Follow Us</h4>
                     <div class="flex space-x-3">
-                        @include('components.social-icon', [
-                            'icon' => 'facebook',
-                            'url' => '#',
-                            'color' => 'teal',
-                        ])
-                        @include('components.social-icon', [
-                            'icon' => 'twitter',
-                            'url' => '#',
-                            'color' => 'orange',
-                        ])
-                        @include('components.social-icon', [
-                            'icon' => 'youtube',
-                            'url' => '#',
-                            'color' => 'teal',
-                        ])
+                        <x-ui.social-icon icon="facebook" url="#" color="teal" />
+                        <x-ui.social-icon icon="twitter" url="#" color="orange" />
+                        <x-ui.social-icon icon="youtube" url="#" color="teal" />
                     </div>
                 </div>
             </div>

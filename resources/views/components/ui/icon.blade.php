@@ -2,12 +2,14 @@
   Icon Component (SVG Icons)
 
   Usage:
-  @include('components.icon', [
-      'name' => 'clock',      // icon name: clock, users, heart, calendar, check, etc
-      'size' => 'w-8 h-8',    // tailwind size class
-      'color' => 'current'    // color: current (uses currentColor), or specific color
-  ])
+  <x-ui.icon name="clock" size="w-8 h-8" color="currentColor" />
 --}}
+
+@props([
+    'name' => 'paw',
+    'size' => 'w-8 h-8',
+    'color' => 'currentColor',
+])
 
 @php
     $icons = [
@@ -44,10 +46,9 @@
     ];
 
     $iconPath = $icons[$name] ?? '';
-    $sizeClass = $size ?? 'w-8 h-8';
 @endphp
 
-<svg class="{{ $sizeClass }} block" fill="{{ $color ?? 'currentColor' }}" viewBox="0 0 24 24"
+<svg {{ $attributes->merge(['class' => "$size block"]) }} fill="{{ $color }}" viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg">
     <path d="{{ $iconPath }}" />
 </svg>

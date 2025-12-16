@@ -1,4 +1,17 @@
-<div class="card bg-white rounded-3xl p-8 shadow-lg">
+{{--
+  Feature Card Component
+
+  Usage:
+  <x-cards.feature-card icon="...svg path..." title="Smart Reminders" description="Never miss feeding time" />
+--}}
+
+@props([
+    'icon' => '',
+    'title' => '',
+    'description' => '',
+])
+
+<div {{ $attributes->merge(['class' => 'card bg-white rounded-3xl p-8 shadow-lg']) }}>
     <div class="feature-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
         <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="{{ $icon }}" />

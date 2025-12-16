@@ -16,13 +16,13 @@
 
 <body class="gradient-bg">
 
-    @include('partials.navbar')
+    <x-layout.navbar />
 
     <main>
         @yield('content')
     </main>
 
-    @include('partials.footer')
+    <x-layout.footer />
 </body>
 
 </html>
