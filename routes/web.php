@@ -12,4 +12,6 @@ Route::name('auth.')->group(function () {
     Route::view('/login', 'pages.auth')->name('login');
 });
 
-Route::view('/dashboard', 'pages.dashboard')->name('dashboard');
+Route::name('user.')->group(function () {
+    Route::view('/dashboard', 'pages.user.dashboard')->name('dashboard');
+});

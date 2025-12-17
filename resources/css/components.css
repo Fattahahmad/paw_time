@@ -240,3 +240,132 @@
 .hide {
   display: none !important;
 }
+
+/* ===================================
+   DASHBOARD COMPONENTS
+   =================================== */
+
+/* Gradient Card */
+.gradient-card {
+  background: linear-gradient(135deg, #FFD4B2 0%, #FFA07A 100%);
+}
+
+/* Action Button */
+.action-btn {
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Pet Card */
+.pet-card {
+  transition: all 0.3s ease;
+}
+
+.pet-card:hover {
+  transform: translateX(5px);
+}
+
+/* Reminder Card */
+.reminder-card {
+  transition: all 0.3s ease;
+}
+
+.reminder-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Background Bubbles */
+.bubble {
+  position: fixed;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: bubble-float 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes bubble-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  animation: slideUp 0.3s ease;
+  position: relative;
+  margin: auto;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gender Button */
+.gender-btn {
+  transition: all 0.3s ease;
+}
+
+.gender-btn.active-male {
+  border-color: #93C5FD;
+  background-color: #EFF6FF;
+  color: #2563EB;
+}
+
+.gender-btn.active-female {
+  border-color: #F9A8D4;
+  background-color: #FDF2F8;
+  color: #DB2777;
+}
+
+/* Tab Active State for Dashboard */
+.tab-active {
+  color: #68C4CF;
+  border-bottom: 3px solid #68C4CF;
+}
+
+/* Calendar Picker Styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+}
