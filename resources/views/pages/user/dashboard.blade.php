@@ -183,6 +183,34 @@
                 </div>
             </div>
 
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Pet Type</label>
+                <input type="text" placeholder="Dog, Cat, etc."
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-[#68C4CF] focus:outline-none bg-gray-50">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Breed</label>
+                <input type="text" placeholder="Golden Retriever"
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-[#68C4CF] focus:outline-none bg-gray-50">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Height (cm)</label>
+                <input type="text" placeholder="Ex : 40 cm"
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-[#68C4CF] focus:outline-none bg-gray-50">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Weight (kg)</label>
+                <input type="text" placeholder="Ex : 5 kg"
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-[#68C4CF] focus:outline-none bg-gray-50">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Colour</label>
+                <input type="text" placeholder="mix brown"
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-[#68C4CF] focus:outline-none bg-gray-50">
+            </div>
+
             <button type="submit" class="btn-primary w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg">
                 Save Profile
             </button>

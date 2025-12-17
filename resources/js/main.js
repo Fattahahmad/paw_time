@@ -46,3 +46,47 @@ window.selectGender = function(btn, type) {
     btn.className = 'gender-btn active-female border-2 border-pink-300 bg-pink-50 text-pink-600 py-3 rounded-2xl font-semibold flex items-center justify-center space-x-2';
   }
 }
+
+// Chart Page Functions
+window.switchTab = function(tab) {
+  const entryTab = document.getElementById('entryTab');
+  const chartTab = document.getElementById('chartTab');
+  const entryContent = document.getElementById('entryContent');
+  const chartContent = document.getElementById('chartContent');
+
+  if (tab === 'entry') {
+    entryTab.classList.add('active');
+    chartTab.classList.remove('active');
+    entryContent.classList.add('active');
+    chartContent.classList.remove('active');
+  } else {
+    chartTab.classList.add('active');
+    entryTab.classList.remove('active');
+    chartContent.classList.add('active');
+    entryContent.classList.remove('active');
+
+    // Initialize chart when switching to chart tab
+    if (typeof initChart === 'function') {
+      initChart();
+    }
+  }
+}
+
+// Filter and view button handlers for chart page
+document.addEventListener('DOMContentLoaded', () => {
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // View buttons
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});

@@ -369,3 +369,46 @@
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
 }
+
+/* ===================================
+   CHART PAGE COMPONENTS
+   =================================== */
+
+/* Tab Button */
+.tab-btn {
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background: white;
+  color: #68C4CF;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter Button */
+.filter-btn {
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+  background: #FFD4B2;
+  color: #FF8C42;
+}
+
+/* View Button */
+.view-btn {
+  transition: all 0.3s ease;
+}
+
+.view-btn.active {
+  background: #E5E7EB;
+}
+
+/* Content Section for Tab Switching */
+.content-section {
+  display: none;
+}
+
+.content-section.active {
+  display: block;
+}
