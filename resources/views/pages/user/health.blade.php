@@ -37,8 +37,8 @@
             {{-- Doctor Card 1 --}}
             <div class="doctor-card rounded-3xl p-4 cursor-pointer" onclick="window.showDoctorDetail()">
                 <div class="bg-white rounded-2xl p-3 mb-3">
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop"
-                        alt="Doctor" class="w-full h-32 object-cover rounded-xl mb-2">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Doctor"
+                        class="w-full h-32 object-cover rounded-xl mb-2">
                 </div>
                 <div class="text-center">
                     <h3 class="font-bold text-gray-800 text-sm mb-1">Dr. Kalini Jithma</h3>
@@ -85,8 +85,8 @@
             {{-- Doctor Card 3 --}}
             <div class="doctor-card rounded-3xl p-4 cursor-pointer" onclick="window.showDoctorDetail()">
                 <div class="bg-white rounded-2xl p-3 mb-3">
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop"
-                        alt="Doctor" class="w-full h-32 object-cover rounded-xl mb-2">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Doctor"
+                        class="w-full h-32 object-cover rounded-xl mb-2">
                 </div>
                 <div class="text-center">
                     <h3 class="font-bold text-gray-800 text-sm mb-1">Dr. Kalini Jithma</h3>
@@ -167,11 +167,13 @@
             <div class="mb-6">
                 <h2 class="text-lg font-bold text-gray-800 mb-4">Schedule</h2>
                 <div class="flex justify-between mb-4">
-                    <button class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
+                    <button
+                        class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
                         <span class="text-xs mb-1">Mon</span>
                         <span class="text-lg font-bold">15</span>
                     </button>
-                    <button class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
+                    <button
+                        class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
                         <span class="text-xs mb-1">Tue</span>
                         <span class="text-lg font-bold">16</span>
                     </button>
@@ -179,11 +181,13 @@
                         <span class="text-xs mb-1">Wed</span>
                         <span class="text-lg font-bold">17</span>
                     </button>
-                    <button class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
+                    <button
+                        class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
                         <span class="text-xs mb-1">Thu</span>
                         <span class="text-lg font-bold">18</span>
                     </button>
-                    <button class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
+                    <button
+                        class="schedule-day flex flex-col items-center px-4 py-3 rounded-2xl bg-gray-100 text-gray-600">
                         <span class="text-xs mb-1">Fri</span>
                         <span class="text-lg font-bold">19</span>
                     </button>
@@ -197,11 +201,13 @@
 
             {{-- Action Buttons --}}
             <div class="flex space-x-3 pb-6">
-                <button class="flex-1 btn-primary text-white py-4 rounded-2xl font-semibold shadow-lg flex items-center justify-center space-x-2">
+                <button
+                    class="flex-1 btn-primary text-white py-4 rounded-2xl font-semibold shadow-lg flex items-center justify-center space-x-2">
                     <x-ui.icon name="email" size="w-5 h-5" color="currentColor" />
                     <span>WhatsApp</span>
                 </button>
-                <button class="flex-1 btn-primary text-white py-4 rounded-2xl font-semibold shadow-lg flex items-center justify-center space-x-2">
+                <button
+                    class="flex-1 btn-primary text-white py-4 rounded-2xl font-semibold shadow-lg flex items-center justify-center space-x-2">
                     <span>Book Now</span>
                     <x-ui.icon name="chevron-right" size="w-5 h-5" color="currentColor" />
                 </button>

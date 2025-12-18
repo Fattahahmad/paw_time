@@ -17,7 +17,8 @@
 
         {{-- Filter Chips --}}
         <div class="flex flex-wrap gap-2 mb-6">
-            <button class="filter-chip active px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
+            <button
+                class="filter-chip active px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
                 All
             </button>
             <button class="filter-chip px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
