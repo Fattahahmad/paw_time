@@ -9,7 +9,7 @@
             <button class="md:hidden" onclick="toggleSidebar()">
                 <x-ui.icon name="menu" size="w-6 h-6" color="currentColor" />
             </button>
-            <h1 class="text-xl font-bold text-gray-800">Your Family</h1>
+            <h1 class="text-xl font-bold text-gray-800">Paw Time</h1>
         </div>
         <button class="relative">
             <x-ui.icon name="bell" size="w-6 h-6" color="currentColor" class="text-gray-700" />

@@ -33,14 +33,21 @@
             @endif
         </a>
 
-        <button class="flex flex-col items-center space-y-1 text-gray-400">
+        <a href="{{ route('user.health') }}"
+            class="{{ $currentRoute === 'user.health' ? 'bg-[#FF8C42] text-white rounded-full p-4 -mt-8 shadow-lg' : 'flex flex-col items-center space-y-1 text-gray-400' }}">
             <x-ui.icon name="meds" size="w-6 h-6" color="currentColor" />
-            <span class="text-xs font-semibold">Health</span>
-        </button>
+            @if ($currentRoute !== 'user.health')
+                <span class="text-xs font-semibold">Health</span>
+            @endif
+        </a>
 
-        <button class="flex flex-col items-center space-y-1 text-gray-400">
+        <a href="{{ route('user.profile') }}"
+            class="{{ $currentRoute === 'user.profile' ? 'bg-[#FF8C42] text-white rounded-full p-4 -mt-8 shadow-lg' : 'flex flex-col items-center space-y-1 text-gray-400' }}">
             <x-ui.icon name="user" size="w-6 h-6" color="currentColor" />
-            <span class="text-xs font-semibold">Profile</span>
-        </button>
+            @if ($currentRoute !== 'user.profile')
+                <span class="text-xs font-semibold">Profile</span>
+            @endif
+        </a>
+
     </div>
 </nav>

@@ -16,4 +16,6 @@ Route::name('user.')->group(function () {
     Route::view('/dashboard', 'pages.user.dashboard')->name('dashboard');
     Route::view('/chart', 'pages.user.chart')->name('chart');
     Route::view('/reminder', 'pages.user.reminder')->name('reminder');
+    Route::view('/profile', 'pages.user.profile')->name('profile');
+    Route::view('/health', 'pages.user.health')->name('health');
 });

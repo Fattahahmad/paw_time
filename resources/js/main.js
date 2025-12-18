@@ -174,3 +174,29 @@ document.addEventListener('click', function(event) {
     window.closeAddReminderModal();
   }
 });
+
+// Health Page Functions
+window.showDoctorDetail = function() {
+  document.getElementById('healthList').classList.remove('active');
+  document.getElementById('doctorDetail').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+window.showHealthList = function() {
+  document.getElementById('doctorDetail').classList.remove('active');
+  document.getElementById('healthList').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// Profile Page Functions
+window.showDetailProfile = function() {
+  document.getElementById('profileList').classList.remove('active');
+  document.getElementById('detailProfile').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+window.showProfileList = function() {
+  document.getElementById('detailProfile').classList.remove('active');
+  document.getElementById('profileList').classList.add('active');
+  window.scrollTo(0, 0);
+}
