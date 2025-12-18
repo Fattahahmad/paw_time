@@ -509,6 +509,32 @@
             background: #FF8C42;
             border-radius: 50%;
         }
+
+        /* Custom Year Dropdown */
+        .flatpickr-year-dropdown {
+            background: #93C5FD !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            padding: 0.4rem 1.5rem 0.4rem 0.75rem !important;
+            font-weight: 600 !important;
+            font-size: 0.875rem !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            cursor: pointer !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 0.5rem center !important;
+        }
+
+        .flatpickr-year-dropdown:hover {
+            background: #7CB5F5 !important;
+        }
+
+        .flatpickr-year-dropdown option {
+            background: white !important;
+            color: #1f2937 !important;
+        }
     </style>
 @endpush
 
@@ -539,6 +565,35 @@
                     if (month === currentMonth && eventsOnDays.includes(day)) {
                         dayElem.classList.add('has-event');
                     }
+                },
+                onReady: function(selectedDates, dateStr, instance) {
+                    // Convert year input to dropdown
+                    const yearInput = instance.currentYearElement;
+                    const numInputWrapper = yearInput.parentNode;
+
+                    // Create year dropdown
+                    const yearSelect = document.createElement('select');
+                    yearSelect.className = 'flatpickr-year-dropdown';
+
+                    // Generate year options (2024-2030)
+                    const currentYear = new Date().getFullYear();
+                    for (let year = currentYear - 1; year <= currentYear + 5; year++) {
+                        const option = document.createElement('option');
+                        option.value = year;
+                        option.textContent = year;
+                        if (year === currentYear) {
+                            option.selected = true;
+                        }
+                        yearSelect.appendChild(option);
+                    }
+
+                    // Replace the entire numInputWrapper with the select
+                    numInputWrapper.parentNode.replaceChild(yearSelect, numInputWrapper);
+
+                    // Handle year change
+                    yearSelect.addEventListener('change', function() {
+                        instance.changeYear(parseInt(this.value));
+                    });
                 }
             });
         });
