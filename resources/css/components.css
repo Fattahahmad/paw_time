@@ -412,3 +412,62 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .content-section.active {
   display: block;
 }
+
+/* ===================================
+   REMINDER PAGE COMPONENTS
+   =================================== */
+
+/* Reminder Tab Button */
+.reminder-tab-btn {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.reminder-tab-btn.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.reminder-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 3px 3px 0 0;
+}
+
+/* Filter Chip */
+.filter-chip {
+  transition: all 0.3s ease;
+}
+
+.filter-chip.active {
+  background: #68C4CF;
+  color: white;
+  border-color: #68C4CF;
+}
+
+/* Category Button (Modal) */
+.category-btn {
+  transition: all 0.3s ease;
+}
+
+.category-btn.active {
+  background: #68C4CF;
+  color: white;
+  border-color: #68C4CF;
+}
+
+/* Repeat Button (Modal) */
+.repeat-btn {
+  transition: all 0.3s ease;
+}
+
+.repeat-btn.active {
+  background: #FF8C42;
+  color: white;
+  border-color: #FF8C42;
+}

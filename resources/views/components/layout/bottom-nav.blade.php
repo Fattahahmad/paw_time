@@ -25,10 +25,13 @@
             @endif
         </a>
 
-        <button class="flex flex-col items-center space-y-1 text-gray-400">
+        <a href="{{ route('user.reminder') }}"
+            class="{{ $currentRoute === 'user.reminder' ? 'bg-[#FF8C42] text-white rounded-full p-4 -mt-8 shadow-lg' : 'flex flex-col items-center space-y-1 text-gray-400' }}">
             <x-ui.icon name="alarm" size="w-6 h-6" color="currentColor" />
-            <span class="text-xs font-semibold">Reminder</span>
-        </button>
+            @if ($currentRoute !== 'user.reminder')
+                <span class="text-xs font-semibold">Reminder</span>
+            @endif
+        </a>
 
         <button class="flex flex-col items-center space-y-1 text-gray-400">
             <x-ui.icon name="meds" size="w-6 h-6" color="currentColor" />

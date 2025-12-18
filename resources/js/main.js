@@ -89,4 +89,88 @@ document.addEventListener('DOMContentLoaded', () => {
       this.classList.add('active');
     });
   });
+
+  // Filter chips (Reminder page)
+  document.querySelectorAll('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Category buttons (Reminder modal)
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.parentNode.querySelectorAll('.category-btn').forEach(sib => {
+        sib.classList.remove('active', 'text-white');
+        sib.classList.add('text-gray-600');
+      });
+      this.classList.add('active');
+      this.classList.remove('text-gray-600');
+    });
+  });
+
+  // Repeat buttons (Reminder modal)
+  document.querySelectorAll('.repeat-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.parentNode.querySelectorAll('.repeat-btn').forEach(sib => {
+        sib.classList.remove('active', 'text-white');
+        sib.classList.add('text-gray-600');
+      });
+      this.classList.add('active');
+      this.classList.remove('text-gray-600');
+    });
+  });
+});
+
+// Reminder Page Functions
+window.switchReminderTab = function(tabId) {
+  // Remove active state from all tabs
+  document.querySelectorAll('.reminder-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.classList.add('text-white/80');
+    btn.classList.remove('text-white');
+    btn.classList.remove('font-semibold');
+  });
+
+  // Hide all content sections
+  document.querySelectorAll('.content-section').forEach(section => {
+    section.classList.remove('active');
+  });
+
+  // Activate selected tab
+  const activeTab = document.getElementById(tabId + 'Tab');
+  if (activeTab) {
+    activeTab.classList.add('active', 'font-semibold');
+    activeTab.classList.remove('text-white/80');
+    activeTab.classList.add('text-white');
+  }
+
+  // Show selected content
+  const contentSection = document.getElementById(tabId + 'Content');
+  if (contentSection) {
+    contentSection.classList.add('active');
+  }
+}
+
+window.openAddReminderModal = function() {
+  const modal = document.getElementById('addReminderModal');
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+window.closeAddReminderModal = function() {
+  const modal = document.getElementById('addReminderModal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById('addReminderModal');
+  if (modal && event.target === modal) {
+    window.closeAddReminderModal();
+  }
 });
