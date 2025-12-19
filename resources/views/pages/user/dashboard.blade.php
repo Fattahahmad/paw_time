@@ -43,33 +43,11 @@
     <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-800 mb-4">Quick Action</h2>
         <div class="grid grid-cols-4 gap-4">
-            <button class="action-btn bg-white rounded-2xl p-4 text-center shadow-sm" onclick="openAddPetModal()">
-                <div class="bg-orange-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                    <x-ui.icon name="plus" size="w-6 h-6" color="#FF8C42" />
-                </div>
-                <p class="text-xs font-semibold text-gray-700">Add Pet</p>
-            </button>
-
-            <button class="action-btn bg-white rounded-2xl p-4 text-center shadow-sm">
-                <div class="bg-green-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                    <x-ui.icon name="calendar" size="w-6 h-6" color="#10b981" />
-                </div>
-                <p class="text-xs font-semibold text-gray-700">Pet Log</p>
-            </button>
-
-            <button class="action-btn bg-white rounded-2xl p-4 text-center shadow-sm">
-                <div class="bg-blue-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                    <x-ui.icon name="clipboard" size="w-6 h-6" color="#3b82f6" />
-                </div>
-                <p class="text-xs font-semibold text-gray-700">Med Log</p>
-            </button>
-
-            <button class="action-btn bg-white rounded-2xl p-4 text-center shadow-sm">
-                <div class="bg-purple-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                    <x-ui.icon name="users" size="w-6 h-6" color="#a855f7" />
-                </div>
-                <p class="text-xs font-semibold text-gray-700">Vet Visit</p>
-            </button>
+            <x-ui.action-button icon="plus" iconColor="#FF8C42" iconBg="orange" label="Add Pet"
+                onclick="openAddPetModal()" />
+            <x-ui.action-button icon="calendar" iconColor="#10b981" iconBg="green" label="Pet Log" />
+            <x-ui.action-button icon="clipboard" iconColor="#3b82f6" iconBg="blue" label="Med Log" />
+            <x-ui.action-button icon="users" iconColor="#a855f7" iconBg="purple" label="Vet Visit" />
         </div>
     </div>
 
@@ -80,20 +58,8 @@
             <button class="text-[#68C4CF] font-semibold text-sm">See all</button>
         </div>
 
-        <div class="pet-card bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between cursor-pointer"
-            onclick="openPetDetail()">
-            <div class="flex items-center space-x-4">
-                <div class="bg-orange-100 p-3 rounded-2xl">
-                    <x-ui.icon name="paw" size="w-8 h-8" color="#FF8C42" />
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-800">Bella Bulul</h3>
-                    <p class="text-sm text-gray-500">American curl</p>
-                    <p class="text-xs text-gray-400">3 Age • <span class="text-[#68C4CF]">Cat</span></p>
-                </div>
-            </div>
-            <x-ui.icon name="chevron-right" size="w-6 h-6" color="currentColor" class="text-gray-400" />
-        </div>
+        <x-cards.pet-card name="Bella Bulul" breed="American curl" age="3" type="Cat" icon="paw"
+            iconBg="orange" iconColor="#FF8C42" onclick="openPetDetail()" />
     </div>
 
     {{-- Upcoming Reminder --}}
@@ -103,23 +69,9 @@
             <button class="text-[#68C4CF] font-semibold text-sm">See all</button>
         </div>
 
-        <div class="reminder-card bg-white rounded-2xl p-4 shadow-sm mb-3">
-            <div class="flex items-start justify-between mb-3">
-                <div class="flex items-start space-x-3">
-                    <div class="bg-orange-100 p-2 rounded-lg">
-                        <x-ui.icon name="cart" size="w-5 h-5" color="#FF8C42" />
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Feeding</h3>
-                        <p class="text-xs text-gray-500 mt-1">Bella</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs font-semibold text-gray-700">Fri, 25 Juni 2025</p>
-                    <p class="text-xs text-gray-500 mt-1">10:00 AM</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
+        <x-cards.reminder-card title="Feeding" pet="Bella" date="Fri, 25 Juni 2025" time="10:00 AM" icon="cart"
+            iconBg="orange" borderColor="orange">
+            <x-slot:actions>
                 <button
                     class="flex-1 bg-green-100 text-green-700 py-2 rounded-lg text-sm font-semibold flex items-center justify-center space-x-1">
                     <x-ui.icon name="check" size="w-4 h-4" color="currentColor" />
@@ -130,15 +82,10 @@
                     <x-ui.icon name="trash" size="w-4 h-4" color="currentColor" />
                     <span>Delete</span>
                 </button>
-            </div>
-        </div>
+            </x-slot:actions>
+        </x-cards.reminder-card>
 
-        <div class="text-center py-8">
-            <div class="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <x-ui.icon name="info" size="w-10 h-10" color="currentColor" class="text-gray-400" />
-            </div>
-            <p class="text-sm text-gray-500">All caught up! 🎉</p>
-        </div>
+        <x-ui.empty-state message="All caught up! 🎉" />
     </div>
 @endsection
 
@@ -167,20 +114,7 @@
 
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <button type="button"
-                        class="gender-btn active-male border-2 border-blue-300 bg-blue-50 text-blue-600 py-3 rounded-2xl font-semibold flex items-center justify-center space-x-2"
-                        onclick="selectGender(this, 'male')">
-                        <x-ui.icon name="male" size="w-5 h-5" color="currentColor" />
-                        <span>Male</span>
-                    </button>
-                    <button type="button"
-                        class="gender-btn border-2 border-gray-200 text-gray-600 py-3 rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:border-pink-300 hover:bg-pink-50 hover:text-pink-600"
-                        onclick="selectGender(this, 'female')">
-                        <x-ui.icon name="female" size="w-5 h-5" color="currentColor" />
-                        <span>Female</span>
-                    </button>
-                </div>
+                <x-ui.gender-selector selected="male" />
             </div>
 
             <div>

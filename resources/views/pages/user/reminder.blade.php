@@ -52,22 +52,10 @@
     <div id="remindersContent" class="content-section active">
         {{-- Filter Chips --}}
         <div class="flex space-x-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-            <button
-                class="filter-chip active px-4 py-2 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-700 whitespace-nowrap shadow-sm">
-                All
-            </button>
-            <button
-                class="filter-chip px-4 py-2 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-700 whitespace-nowrap shadow-sm hover:bg-gray-50">
-                Feeding
-            </button>
-            <button
-                class="filter-chip px-4 py-2 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-700 whitespace-nowrap shadow-sm hover:bg-gray-50">
-                Grooming
-            </button>
-            <button
-                class="filter-chip px-4 py-2 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-700 whitespace-nowrap shadow-sm hover:bg-gray-50">
-                Vet
-            </button>
+            <x-ui.filter-chip label="All" :active="true" />
+            <x-ui.filter-chip label="Feeding" />
+            <x-ui.filter-chip label="Grooming" />
+            <x-ui.filter-chip label="Vet" />
         </div>
 
         {{-- Date Header --}}
@@ -78,55 +66,43 @@
             </div>
 
             {{-- Reminder Cards --}}
-            <div class="reminder-card bg-white rounded-2xl p-4 mb-3 shadow-sm border-l-4 border-orange-400">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-start space-x-3 flex-1">
-                        <div class="bg-orange-100 p-2.5 rounded-xl">
-                            <x-ui.icon name="cart" size="w-6 h-6" color="currentColor" class="text-orange-500" />
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-gray-800 mb-1">Morning Feeding</h3>
-                            <div class="flex items-center space-x-2 text-xs text-gray-500">
-                                <span class="bg-gray-100 px-2 py-0.5 rounded text-gray-600">Bella</span>
-                                <span>•</span>
-                                <span>200g Dry Food</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">08:00 AM</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 mt-2">
+            <x-cards.reminder-card title="Morning Feeding" pet="Bella" detail="200g Dry Food" time="08:00 AM"
+                icon="cart" iconBg="orange" borderColor="orange" :showActions="true">
+                <x-slot:actions>
+                    <button onclick="window.editReminder(1)"
+                        class="btn-edit px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <x-ui.icon name="pencil" size="w-4 h-4" color="currentColor" class="inline mr-1" />
+                        Edit
+                    </button>
+                    <button
+                        onclick="window.deleteReminder(1, 'Morning Feeding', 'Bella', '08:00 AM', 'Feeding', '200g Dry Food', 'cart', 'orange')"
+                        class="btn-delete px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <x-ui.icon name="trash" size="w-4 h-4" color="currentColor" class="inline mr-1" />
+                        Delete
+                    </button>
                     <button
                         class="flex-1 bg-green-50 text-green-600 py-2 rounded-xl text-xs font-bold hover:bg-green-100 transition">Complete</button>
-                </div>
-            </div>
+                </x-slot:actions>
+            </x-cards.reminder-card>
 
-            <div class="reminder-card bg-white rounded-2xl p-4 mb-3 shadow-sm border-l-4 border-purple-400">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-start space-x-3 flex-1">
-                        <div class="bg-purple-100 p-2.5 rounded-xl">
-                            <x-ui.icon name="building" size="w-6 h-6" color="currentColor" class="text-purple-500" />
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-bold text-gray-800 mb-1">Grooming Salon</h3>
-                            <div class="flex items-center space-x-2 text-xs text-gray-500">
-                                <span class="bg-gray-100 px-2 py-0.5 rounded text-gray-600">Mochi</span>
-                                <span>•</span>
-                                <span>Petshop Indonesia</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">02:00 PM</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 mt-2">
+            <x-cards.reminder-card title="Grooming Salon" pet="Mochi" detail="Petshop Indonesia" time="02:00 PM"
+                icon="building" iconBg="purple" borderColor="purple" :showActions="true">
+                <x-slot:actions>
+                    <button onclick="window.editReminder(2)"
+                        class="btn-edit px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <x-ui.icon name="pencil" size="w-4 h-4" color="currentColor" class="inline mr-1" />
+                        Edit
+                    </button>
+                    <button
+                        onclick="window.deleteReminder(2, 'Grooming Salon', 'Mochi', '02:00 PM', 'Grooming', 'Petshop Indonesia', 'building', 'purple')"
+                        class="btn-delete px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <x-ui.icon name="trash" size="w-4 h-4" color="currentColor" class="inline mr-1" />
+                        Delete
+                    </button>
                     <button
                         class="flex-1 bg-green-50 text-green-600 py-2 rounded-xl text-xs font-bold hover:bg-green-100 transition">Complete</button>
-                </div>
-            </div>
+                </x-slot:actions>
+            </x-cards.reminder-card>
         </div>
     </div>
 
@@ -142,40 +118,11 @@
             <h3 class="text-lg font-bold text-gray-800 mb-4">Tasks for Today</h3>
 
             <div class="space-y-3" id="calendarTasks">
-                <div class="reminder-card bg-white rounded-2xl p-4 shadow-sm border-l-4 border-orange-400">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3 flex-1">
-                            <div class="bg-orange-100 p-2 rounded-xl">
-                                <x-ui.icon name="cart" size="w-5 h-5" color="currentColor" class="text-orange-500" />
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-sm">Morning Feeding</h4>
-                                <p class="text-xs text-gray-500">Bella</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-semibold text-gray-700">08:00 AM</p>
-                        </div>
-                    </div>
-                </div>
+                <x-cards.reminder-card title="Morning Feeding" pet="Bella" time="08:00 AM" icon="cart"
+                    iconBg="orange" borderColor="orange" />
 
-                <div class="reminder-card bg-white rounded-2xl p-4 shadow-sm border-l-4 border-purple-400">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3 flex-1">
-                            <div class="bg-purple-100 p-2 rounded-xl">
-                                <x-ui.icon name="building" size="w-5 h-5" color="currentColor"
-                                    class="text-purple-500" />
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-sm">Grooming</h4>
-                                <p class="text-xs text-gray-500">Mochi</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-semibold text-gray-700">02:00 PM</p>
-                        </div>
-                    </div>
-                </div>
+                <x-cards.reminder-card title="Grooming" pet="Mochi" time="02:00 PM" icon="building" iconBg="purple"
+                    borderColor="purple" />
             </div>
         </div>
     </div>
@@ -243,9 +190,9 @@
     </div>
 
     {{-- Add Reminder Modal --}}
-    <div id="addReminderModal" class="modal items-end md:items-center justify-center">
+    <div id="addReminderModal" class="modal">
         <div
-            class="modal-content bg-white w-full md:max-w-md rounded-t-3xl md:rounded-3xl p-6 h-[85vh] md:h-auto overflow-y-auto">
+            class="modal-content bg-white md:max-w-md rounded-t-3xl md:rounded-3xl p-6 h-[85vh] md:h-auto overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800">Add Reminder</h2>
                 <button onclick="window.closeAddReminderModal()" class="p-2 hover:bg-gray-100 rounded-full">
@@ -306,6 +253,11 @@
             </form>
         </div>
     </div>
+
+    {{-- Delete Confirmation Modal --}}
+    <x-ui.confirmation-modal id="deleteConfirmModal" title="Hapus Reminder?"
+        message="Data yang dihapus tidak dapat dikembalikan" confirmText="Hapus" cancelText="Batal" confirmColor="red"
+        icon="alert" iconColor="red" :showDetails="true" />
 @endsection
 
 @push('styles')

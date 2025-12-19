@@ -17,19 +17,10 @@
 
         {{-- Filter Chips --}}
         <div class="flex flex-wrap gap-2 mb-6">
-            <button
-                class="filter-chip active px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
-                All
-            </button>
-            <button class="filter-chip px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
-                Cat
-            </button>
-            <button class="filter-chip px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
-                Dog
-            </button>
-            <button class="filter-chip px-4 py-2 rounded-full text-sm font-semibold border-2 border-gray-300 text-gray-700">
-                Other
-            </button>
+            <x-ui.filter-chip label="All" :active="true" />
+            <x-ui.filter-chip label="Cat" />
+            <x-ui.filter-chip label="Dog" />
+            <x-ui.filter-chip label="Other" />
         </div>
 
         {{-- Cat Section --}}
@@ -41,20 +32,8 @@
                 <button class="add-link">+ Add Cat</button>
             </div>
 
-            <div class="pet-card bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between cursor-pointer"
-                onclick="window.showDetailProfile()">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-orange-100 p-3 rounded-2xl">
-                        <x-ui.icon name="paw" size="w-10 h-10" color="#FF8C42" />
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">Bella Bulul</h3>
-                        <p class="text-sm text-gray-500">American curl</p>
-                        <p class="text-xs text-gray-400">3 Age • <span class="info-badge inline-block">Cat</span></p>
-                    </div>
-                </div>
-                <x-ui.icon name="chevron-right" size="w-6 h-6" color="currentColor" class="text-gray-400" />
-            </div>
+            <x-cards.pet-card name="Bella Bulul" breed="American curl" age="3" type="Cat" icon="paw"
+                iconBg="orange" iconColor="#FF8C42" onclick="window.showDetailProfile()" />
         </div>
 
         {{-- Dog Section --}}
@@ -66,20 +45,8 @@
                 <button class="add-link">+ Add Dog</button>
             </div>
 
-            <div class="pet-card bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between cursor-pointer"
-                onclick="window.showDetailProfile()">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-blue-100 p-3 rounded-2xl">
-                        <x-ui.icon name="paw" size="w-10 h-10" color="#2563EB" />
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">Bella Bulul</h3>
-                        <p class="text-sm text-gray-500">American curl</p>
-                        <p class="text-xs text-gray-400">3 Age • <span class="info-badge inline-block">Dog</span></p>
-                    </div>
-                </div>
-                <x-ui.icon name="chevron-right" size="w-6 h-6" color="currentColor" class="text-gray-400" />
-            </div>
+            <x-cards.pet-card name="Bella Bulul" breed="American curl" age="3" type="Dog" icon="paw"
+                iconBg="blue" iconColor="#2563EB" onclick="window.showDetailProfile()" />
         </div>
 
         {{-- Other Section --}}
@@ -91,20 +58,8 @@
                 <button class="add-link">+ Add Pet</button>
             </div>
 
-            <div class="pet-card bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between cursor-pointer"
-                onclick="window.showDetailProfile()">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-purple-100 p-3 rounded-2xl">
-                        <x-ui.icon name="paw" size="w-10 h-10" color="#7C3AED" />
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">Bella Bulul</h3>
-                        <p class="text-sm text-gray-500">American curl</p>
-                        <p class="text-xs text-gray-400">3 Age • <span class="info-badge inline-block">Other</span></p>
-                    </div>
-                </div>
-                <x-ui.icon name="chevron-right" size="w-6 h-6" color="currentColor" class="text-gray-400" />
-            </div>
+            <x-cards.pet-card name="Bella Bulul" breed="American curl" age="3" type="Other" icon="paw"
+                iconBg="purple" iconColor="#7C3AED" onclick="window.showDetailProfile()" />
         </div>
     </div>
 

@@ -167,6 +167,72 @@ window.closeAddReminderModal = function() {
   }
 }
 
+window.editReminder = function(reminderId) {
+  console.log("Edit reminder:", reminderId);
+  // TODO: Populate modal with reminder data and show edit modal
+  window.openAddReminderModal();
+}
+
+// Store reminder ID for deletion
+let reminderToDelete = null;
+
+window.deleteReminder = function(reminderId, title, pet, time, category, note, icon, iconColor) {
+  reminderToDelete = reminderId;
+
+  // Populate modal with reminder details
+  document.getElementById('deleteConfirmModalTitle').textContent = title;
+  document.getElementById('deleteConfirmModalDetail1').textContent = pet;
+  document.getElementById('deleteConfirmModalDetail2').textContent = time;
+  document.getElementById('deleteConfirmModalDetail3').textContent = category;
+  document.getElementById('deleteConfirmModalDetail4').textContent = note;
+
+  // Update icon
+  const iconWrapper = document.getElementById('deleteConfirmModalIcon');
+  iconWrapper.className = `bg-${iconColor}-100 p-2 rounded-xl`;
+
+  // Show modal
+  const modal = document.getElementById('deleteConfirmModal');
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+window.closeDeleteConfirmModal = function() {
+  const modal = document.getElementById('deleteConfirmModal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+  reminderToDelete = null;
+}
+
+window.confirmDeleteConfirmModal = function() {
+  if (reminderToDelete) {
+    // TODO: Implement actual delete API call here
+    console.log("Deleting reminder:", reminderToDelete);
+
+    // Close modal
+    window.closeDeleteConfirmModal();
+
+    // Show success toast
+    window.showToast({
+      type: 'success',
+      title: 'Berhasil',
+      message: 'Reminder berhasil dihapus',
+      duration: 3000
+    });
+
+    reminderToDelete = null;
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById('deleteConfirmModal');
+  if (modal && event.target === modal) {
+    window.closeDeleteConfirmModal();
+  }
+});
+
 // Close modal when clicking outside
 document.addEventListener('click', function(event) {
   const modal = document.getElementById('addReminderModal');

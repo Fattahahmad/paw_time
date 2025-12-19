@@ -18,7 +18,7 @@
         {{-- Buttons (Right) --}}
         <div class="flex items-center space-x-3 flex-shrink-0">
             <x-ui.button text="Download" type="primary" size="md" />
-            <x-ui.button text="Register" type="white" size="md" />
+            <x-ui.button text="Register" type="white" size="md" href="{{ route('auth.login') }}" />
         </div>
 
     </div>

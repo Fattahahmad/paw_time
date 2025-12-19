@@ -35,100 +35,52 @@
 
         <div class="grid grid-cols-2 gap-4">
             {{-- Doctor Card 1 --}}
-            <div class="doctor-card rounded-3xl p-4 cursor-pointer" onclick="window.showDoctorDetail()">
-                <div class="bg-white rounded-2xl p-3 mb-3">
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Doctor"
-                        class="w-full h-32 object-cover rounded-xl mb-2">
-                </div>
-                <div class="text-center">
-                    <h3 class="font-bold text-gray-800 text-sm mb-1">Dr. Kalini Jithma</h3>
-                    <p class="text-xs text-gray-600 mb-2">Veterinary surgery</p>
-                    <div class="flex items-center justify-center space-x-1 mb-2">
-                        <x-ui.icon name="star" size="w-4 h-4" color="#FCD34D" />
-                        <span class="text-xs font-semibold text-gray-700">4.8</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center space-x-2">
-                    <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
-                        <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
-                    </button>
-                    <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
-                        <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
-                    </button>
-                </div>
-            </div>
+            <x-cards.doctor-card name="Dr. Kalini Jithma" specialty="Veterinary surgery" rating="4.8"
+                image="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop"
+                onclick="window.showDoctorDetail()">
+                <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
+                    <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
+                </button>
+                <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
+                    <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
+                </button>
+            </x-cards.doctor-card>
 
             {{-- Doctor Card 2 --}}
-            <div class="doctor-card rounded-3xl p-4 cursor-pointer" onclick="window.showDoctorDetail()">
-                <div class="bg-white rounded-2xl p-3 mb-3">
-                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop"
-                        alt="Doctor" class="w-full h-32 object-cover rounded-xl mb-2">
-                </div>
-                <div class="text-center">
-                    <h3 class="font-bold text-gray-800 text-sm mb-1">Dr. D. Deshappriya</h3>
-                    <p class="text-xs text-gray-600 mb-2">Veterinary surgery</p>
-                    <div class="flex items-center justify-center space-x-1 mb-2">
-                        <x-ui.icon name="star" size="w-4 h-4" color="#FCD34D" />
-                        <span class="text-xs font-semibold text-gray-700">4.9</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center space-x-2">
-                    <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
-                        <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
-                    </button>
-                    <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
-                        <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
-                    </button>
-                </div>
-            </div>
+            <x-cards.doctor-card name="Dr. D. Deshappriya" specialty="Veterinary surgery" rating="4.9"
+                image="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop"
+                onclick="window.showDoctorDetail()">
+                <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
+                    <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
+                </button>
+                <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
+                    <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
+                </button>
+            </x-cards.doctor-card>
 
             {{-- Doctor Card 3 --}}
-            <div class="doctor-card rounded-3xl p-4 cursor-pointer" onclick="window.showDoctorDetail()">
-                <div class="bg-white rounded-2xl p-3 mb-3">
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Doctor"
-                        class="w-full h-32 object-cover rounded-xl mb-2">
-                </div>
-                <div class="text-center">
-                    <h3 class="font-bold text-gray-800 text-sm mb-1">Dr. Kalini Jithma</h3>
-                    <p class="text-xs text-gray-600 mb-2">Veterinary surgery</p>
-                    <div class="flex items-center justify-center space-x-1 mb-2">
-                        <x-ui.icon name="star" size="w-4 h-4" color="#FCD34D" />
-                        <span class="text-xs font-semibold text-gray-700">4.7</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center space-x-2">
-                    <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
-                        <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
-                    </button>
-                    <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
-                        <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
-                    </button>
-                </div>
-            </div>
+            <x-cards.doctor-card name="Dr. Kalini Jithma" specialty="Veterinary surgery" rating="4.7"
+                image="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop"
+                onclick="window.showDoctorDetail()">
+                <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
+                    <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
+                </button>
+                <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
+                    <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
+                </button>
+            </x-cards.doctor-card>
 
             {{-- Doctor Card 4 --}}
-            <div class="doctor-card rounded-3xl p-4 cursor-pointer" onclick="window.showDoctorDetail()">
-                <div class="bg-white rounded-2xl p-3 mb-3">
-                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop"
-                        alt="Doctor" class="w-full h-32 object-cover rounded-xl mb-2">
-                </div>
-                <div class="text-center">
-                    <h3 class="font-bold text-gray-800 text-sm mb-1">Dr. D. Deshappriya</h3>
-                    <p class="text-xs text-gray-600 mb-2">Veterinary surgery</p>
-                    <div class="flex items-center justify-center space-x-1 mb-2">
-                        <x-ui.icon name="star" size="w-4 h-4" color="#FCD34D" />
-                        <span class="text-xs font-semibold text-gray-700">4.6</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center space-x-2">
-                    <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
-                        <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
-                    </button>
-                    <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
-                        <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
-                    </button>
-                </div>
-            </div>
+            <x-cards.doctor-card name="Dr. D. Deshappriya" specialty="Veterinary surgery" rating="4.6"
+                image="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop"
+                onclick="window.showDoctorDetail()">
+                <button class="bg-white text-gray-700 rounded-full p-2 shadow-sm hover:bg-gray-50 transition">
+                    <x-ui.icon name="email" size="w-4 h-4" color="currentColor" />
+                </button>
+                <button class="bg-[#FF8C42] text-white rounded-full p-2 shadow-lg hover:bg-orange-500 transition">
+                    <x-ui.icon name="phone" size="w-4 h-4" color="currentColor" />
+                </button>
+            </x-cards.doctor-card>
         </div>
     </div>
 
