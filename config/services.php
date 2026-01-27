@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'firebase' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'credentials_path' => env('FIREBASE_CREDENTIALS_PATH', storage_path('app/firebase-credentials.json')),
+        'vapid_key' => env('FIREBASE_VAPID_KEY'),
+    ],
+
+    'cron' => [
+        'secret' => env('CRON_SECRET', 'change-this-to-random-string'),
+    ],
+
 ];

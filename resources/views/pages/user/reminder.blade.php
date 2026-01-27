@@ -50,59 +50,86 @@
 
     {{-- Reminders Content --}}
     <div id="remindersContent" class="content-section active">
-        {{-- Filter Chips --}}
-        <div class="flex space-x-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-            <x-ui.filter-chip label="All" :active="true" />
-            <x-ui.filter-chip label="Feeding" />
-            <x-ui.filter-chip label="Grooming" />
-            <x-ui.filter-chip label="Vet" />
+        {{-- Filter by Repeat Type --}}
+        <div class="mb-4">
+            <h3 class="text-xs font-bold text-gray-500 uppercase mb-2">Filter by Schedule</h3>
+            <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide" id="scheduleFilters">
+                <x-ui.filter-chip label="All" :active="true" onclick="filterBySchedule('all')" />
+                <x-ui.filter-chip label="Daily" onclick="filterBySchedule('daily')" />
+                <x-ui.filter-chip label="Weekly" onclick="filterBySchedule('weekly')" />
+                <x-ui.filter-chip label="Monthly" onclick="filterBySchedule('monthly')" />
+                <x-ui.filter-chip label="Yearly" onclick="filterBySchedule('yearly')" />
+                <x-ui.filter-chip label="One-time" onclick="filterBySchedule('none')" />
+            </div>
         </div>
 
-        {{-- Date Header --}}
+        {{-- Filter by Category --}}
         <div class="mb-6">
-            <div class="flex items-center space-x-2 mb-3">
-                <x-ui.icon name="calendar" size="w-5 h-5" color="currentColor" class="text-gray-600" />
-                <span class="text-sm font-bold text-gray-800">Today, 17 July 2024</span>
+            <h3 class="text-xs font-bold text-gray-500 uppercase mb-2">Filter by Category</h3>
+            <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide" id="categoryFilters">
+                <x-ui.filter-chip label="All" :active="true" onclick="filterByCategory('all')" />
+                <x-ui.filter-chip label="Feeding" onclick="filterByCategory('feeding')" />
+                <x-ui.filter-chip label="Grooming" onclick="filterByCategory('grooming')" />
+                <x-ui.filter-chip label="Vaccination" onclick="filterByCategory('vaccination')" />
+                <x-ui.filter-chip label="Medication" onclick="filterByCategory('medication')" />
             </div>
+        </div>
+
+        {{-- Pending Reminders (Upcoming Tasks) --}}
+        <div class="mb-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Upcoming Tasks</h3>
 
             {{-- Reminder Cards --}}
-            <x-cards.reminder-card title="Morning Feeding" pet="Bella" detail="200g Dry Food" time="08:00 AM"
-                icon="cart" iconBg="orange" borderColor="orange" :showActions="true">
-                <x-slot:actions>
-                    <button onclick="window.editReminder(1)"
-                        class="btn-edit px-4 py-2 rounded-xl text-xs font-bold transition">
-                        <x-ui.icon name="pencil" size="w-4 h-4" color="currentColor" class="inline mr-1" />
-                        Edit
-                    </button>
-                    <button
-                        onclick="window.deleteReminder(1, 'Morning Feeding', 'Bella', '08:00 AM', 'Feeding', '200g Dry Food', 'cart', 'orange')"
-                        class="btn-delete px-4 py-2 rounded-xl text-xs font-bold transition">
-                        <x-ui.icon name="trash" size="w-4 h-4" color="currentColor" class="inline mr-1" />
-                        Delete
-                    </button>
-                    <button
-                        class="flex-1 bg-green-50 text-green-600 py-2 rounded-xl text-xs font-bold hover:bg-green-100 transition">Complete</button>
-                </x-slot:actions>
-            </x-cards.reminder-card>
-
-            <x-cards.reminder-card title="Grooming Salon" pet="Mochi" detail="Petshop Indonesia" time="02:00 PM"
-                icon="building" iconBg="purple" borderColor="purple" :showActions="true">
-                <x-slot:actions>
-                    <button onclick="window.editReminder(2)"
-                        class="btn-edit px-4 py-2 rounded-xl text-xs font-bold transition">
-                        <x-ui.icon name="pencil" size="w-4 h-4" color="currentColor" class="inline mr-1" />
-                        Edit
-                    </button>
-                    <button
-                        onclick="window.deleteReminder(2, 'Grooming Salon', 'Mochi', '02:00 PM', 'Grooming', 'Petshop Indonesia', 'building', 'purple')"
-                        class="btn-delete px-4 py-2 rounded-xl text-xs font-bold transition">
-                        <x-ui.icon name="trash" size="w-4 h-4" color="currentColor" class="inline mr-1" />
-                        Delete
-                    </button>
-                    <button
-                        class="flex-1 bg-green-50 text-green-600 py-2 rounded-xl text-xs font-bold hover:bg-green-100 transition">Complete</button>
-                </x-slot:actions>
-            </x-cards.reminder-card>
+            @forelse($pendingReminders->take(10) as $reminder)
+                @php
+                    $iconMap = [
+                        'feeding' => 'cart',
+                        'grooming' => 'scissors',
+                        'vaccination' => 'syringe',
+                        'medication' => 'pill',
+                        'checkup' => 'stethoscope',
+                        'other' => 'bell',
+                    ];
+                    $colorMap = [
+                        'feeding' => 'orange',
+                        'grooming' => 'purple',
+                        'vaccination' => 'blue',
+                        'medication' => 'green',
+                        'checkup' => 'red',
+                        'other' => 'gray',
+                    ];
+                    $icon = $iconMap[$reminder->category] ?? 'bell';
+                    $color = $colorMap[$reminder->category] ?? 'gray';
+                @endphp
+                <div class="reminder-card-wrapper" data-category="{{ $reminder->category }}">
+                    <x-cards.reminder-card :title="$reminder->title" :pet="$reminder->pet->pet_name" :detail="$reminder->description ?? ucfirst($reminder->category)" :time="$reminder->remind_date->format('M d, Y - h:i A')"
+                        :icon="$icon" :iconBg="$color" :borderColor="$color" :showActions="true">
+                        <x-slot:actions>
+                            <form action="{{ route('user.reminders.done', $reminder->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn-edit px-4 py-2 rounded-xl text-xs font-bold transition">
+                                    <x-ui.icon name="check" size="w-4 h-4" color="currentColor" class="inline mr-1" />
+                                    Done
+                                </button>
+                            </form>
+                            <form action="{{ route('user.reminders.destroy', $reminder->id) }}" method="POST"
+                                class="inline" onsubmit="return confirm('Delete this reminder?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-delete px-4 py-2 rounded-xl text-xs font-bold transition">
+                                    <x-ui.icon name="trash" size="w-4 h-4" color="currentColor" class="inline mr-1" />
+                                    Delete
+                                </button>
+                            </form>
+                        </x-slot:actions>
+                    </x-cards.reminder-card>
+                </div>
+            @empty
+                <div class="text-center py-8 bg-white rounded-2xl">
+                    <p class="text-gray-500">No pending reminders. Click + to add new reminder.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 
@@ -115,138 +142,153 @@
 
         {{-- Tasks for Selected Date --}}
         <div>
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Tasks for Today</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-4" id="selectedDateTitle">Tasks for Today</h3>
 
             <div class="space-y-3" id="calendarTasks">
-                <x-cards.reminder-card title="Morning Feeding" pet="Bella" time="08:00 AM" icon="cart"
-                    iconBg="orange" borderColor="orange" />
-
-                <x-cards.reminder-card title="Grooming" pet="Mochi" time="02:00 PM" icon="building" iconBg="purple"
-                    borderColor="purple" />
+                @forelse($pendingReminders->filter(function($r) { return $r->remind_date->isToday(); })->take(10) as $reminder)
+                    @php
+                        $iconMap = [
+                            'feeding' => 'cart',
+                            'grooming' => 'scissors',
+                            'vaccination' => 'syringe',
+                            'medication' => 'pill',
+                            'checkup' => 'stethoscope',
+                            'other' => 'bell',
+                        ];
+                        $colorMap = [
+                            'feeding' => 'orange',
+                            'grooming' => 'purple',
+                            'vaccination' => 'blue',
+                            'medication' => 'green',
+                            'checkup' => 'red',
+                            'other' => 'gray',
+                        ];
+                        $icon = $iconMap[$reminder->category] ?? 'bell';
+                        $color = $colorMap[$reminder->category] ?? 'gray';
+                    @endphp
+                    <x-cards.reminder-card :title="$reminder->title" :pet="$reminder->pet->pet_name" :time="$reminder->remind_date->format('h:i A')" :icon="$icon"
+                        :iconBg="$color" :borderColor="$color" />
+                @empty
+                    <p class="text-center text-gray-500 py-4">No tasks for today</p>
+                @endforelse
             </div>
         </div>
     </div>
 
     {{-- History Content --}}
     <div id="historyContent" class="content-section">
-        {{-- Upcoming Tasks --}}
+        {{-- Completed Tasks ONLY --}}
         <div class="mb-6">
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Upcoming Tasks</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-4">History - Completed Tasks</h3>
             <div class="space-y-3">
-                <div class="reminder-card bg-white rounded-2xl p-4 shadow-sm border-l-4 border-blue-400">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-blue-100 p-2 rounded-xl">
-                                <x-ui.icon name="meds" size="w-5 h-5" color="currentColor" class="text-blue-500" />
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-sm">Vaccination</h4>
-                                <p class="text-xs text-gray-500">Bella • Tomorrow</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">Pending</span>
+                @forelse($doneReminders->take(20) as $reminder)
+                    @php
+                        $iconMap = [
+                            'feeding' => 'cart',
+                            'grooming' => 'scissors',
+                            'vaccination' => 'syringe',
+                            'medication' => 'pill',
+                            'checkup' => 'stethoscope',
+                            'other' => 'bell',
+                        ];
+                        $colorMap = [
+                            'feeding' => 'orange',
+                            'grooming' => 'purple',
+                            'vaccination' => 'blue',
+                            'medication' => 'green',
+                            'checkup' => 'red',
+                            'other' => 'gray',
+                        ];
+                        $icon = $iconMap[$reminder->category] ?? 'bell';
+                        $color = $colorMap[$reminder->category] ?? 'gray';
+                    @endphp
+                    <x-cards.reminder-card :title="$reminder->title" :pet="$reminder->pet->pet_name" :detail="$reminder->description ?? ucfirst($reminder->category)" :time="$reminder->remind_date->format('M d, Y - h:i A')"
+                        :icon="$icon" :iconBg="$color" :borderColor="'green'" :showActions="false" />
+                @empty
+                    <div class="text-center py-8 bg-white rounded-2xl">
+                        <p class="text-gray-500">No completed reminders yet.</p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Completed Tasks --}}
-        <div>
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Completed Tasks</h3>
-            <div class="space-y-3">
-                <div class="bg-gray-100 rounded-2xl p-4 shadow-sm opacity-75">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-gray-200 p-2 rounded-xl">
-                                <x-ui.icon name="check-circle" size="w-5 h-5" color="currentColor"
-                                    class="text-gray-500" />
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-600 text-sm line-through">Vaccination</h4>
-                                <p class="text-xs text-gray-500">Bella • Yesterday</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded">Done</span>
-                    </div>
-                </div>
-
-                <div class="bg-gray-100 rounded-2xl p-4 shadow-sm opacity-75">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-gray-200 p-2 rounded-xl">
-                                <x-ui.icon name="check-circle" size="w-5 h-5" color="currentColor"
-                                    class="text-gray-500" />
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-600 text-sm line-through">Evening Walk</h4>
-                                <p class="text-xs text-gray-500">Mochi • Yesterday</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded">Done</span>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
 
     {{-- Add Reminder Modal --}}
     <div id="addReminderModal" class="modal">
-        <div
-            class="modal-content bg-white md:max-w-md rounded-t-3xl md:rounded-3xl p-6 h-[85vh] md:h-auto overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
+        <div class="modal-content bg-white md:max-w-md rounded-t-3xl md:rounded-3xl p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6 sticky top-0 bg-white z-10 pb-4 border-b">
                 <h2 class="text-xl font-bold text-gray-800">Add Reminder</h2>
-                <button onclick="window.closeAddReminderModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                <button onclick="closeModal('addReminderModal')" class="p-2 hover:bg-gray-100 rounded-full">
                     <x-ui.icon name="close" size="w-6 h-6" color="currentColor" class="text-gray-500" />
                 </button>
             </div>
 
-            <form class="space-y-5">
+            <form action="{{ route('user.reminders.store') }}" method="POST" class="space-y-5">
+                @csrf
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Select Pet</label>
+                    <select name="pet_id" required
+                        class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none">
+                        <option value="">Choose pet</option>
+                        @if (isset($pets))
+                            @foreach ($pets as $pet)
+                                <option value="{{ $pet->id }}">{{ $pet->pet_name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Title</label>
-                    <input type="text" placeholder="e.g. Morning Feeding"
+                    <input type="text" name="title" placeholder="e.g. Morning Feeding" required
                         class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none">
                 </div>
 
                 <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                    <textarea name="description" placeholder="Additional details..." rows="2"
+                        class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none"></textarea>
+                </div>
+
+                <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
-                    <div class="flex flex-wrap gap-2">
-                        <button type="button"
-                            class="category-btn active border px-4 py-2 rounded-xl text-sm font-semibold">Feeding</button>
-                        <button type="button"
-                            class="category-btn border px-4 py-2 rounded-xl text-sm font-semibold text-gray-600">Grooming</button>
-                        <button type="button"
-                            class="category-btn border px-4 py-2 rounded-xl text-sm font-semibold text-gray-600">Vet</button>
-                        <button type="button"
-                            class="category-btn border px-4 py-2 rounded-xl text-sm font-semibold text-gray-600">Walk</button>
-                    </div>
+                    <select name="category" required
+                        class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none">
+                        <option value="feeding">🍖 Feeding</option>
+                        <option value="grooming">✂️ Grooming</option>
+                        <option value="vaccination">💉 Vaccination</option>
+                        <option value="medication">💊 Medication</option>
+                        <option value="checkup">🩺 Checkup</option>
+                        <option value="other">📝 Other</option>
+                    </select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Date</label>
-                        <input type="date"
+                        <input type="date" name="remind_date" required
                             class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none text-gray-600">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Time</label>
-                        <input type="time"
+                        <input type="time" name="remind_time" required
                             class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none text-gray-600">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Repeat</label>
-                    <div class="flex gap-2">
-                        <button type="button"
-                            class="repeat-btn active border px-4 py-2 rounded-xl text-sm font-semibold">Daily</button>
-                        <button type="button"
-                            class="repeat-btn border px-4 py-2 rounded-xl text-sm font-semibold text-gray-600">Weekly</button>
-                        <button type="button"
-                            class="repeat-btn border px-4 py-2 rounded-xl text-sm font-semibold text-gray-600">Monthly</button>
-                    </div>
+                    <select name="repeat_type"
+                        class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none">
+                        <option value="none">No Repeat</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
                 </div>
 
-                <button type="button" onclick="window.closeAddReminderModal()"
+                <button type="submit"
                     class="w-full btn-primary py-4 rounded-2xl text-white font-bold text-lg shadow-lg mt-4">
                     Save Reminder
                 </button>
@@ -494,7 +536,166 @@
     {{-- Flatpickr JS --}}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Open Add Reminder Modal
+        window.openAddReminderModal = function() {
+            const modal = document.getElementById('addReminderModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex', 'show');
+            }
+        };
+
+        // Handle URL query parameters on page load
         document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            const action = urlParams.get('action');
+
+            // Switch to specified tab
+            if (tab === 'calendar') {
+                window.switchReminderTab('calendar');
+            } else if (tab === 'history') {
+                window.switchReminderTab('history');
+            }
+
+            // Open add modal if action=add
+            if (action === 'add') {
+                setTimeout(() => {
+                    window.openAddReminderModal();
+                }, 300);
+            }
+        });
+
+        // Close Modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex', 'show');
+            }
+        }
+
+        // Switch Reminder Tab
+        window.switchReminderTab = function(tab) {
+            const remindersTab = document.getElementById('remindersTab');
+            const historyTab = document.getElementById('historyTab');
+            const calendarTab = document.getElementById('calendarTab');
+            const remindersContent = document.getElementById('remindersContent');
+            const historyContent = document.getElementById('historyContent');
+            const calendarContent = document.getElementById('calendarContent');
+
+            // Remove active from all tabs
+            remindersTab.classList.remove('active');
+            historyTab.classList.remove('active');
+            calendarTab.classList.remove('active');
+            remindersContent.classList.remove('active');
+            historyContent.classList.remove('active');
+            calendarContent.classList.remove('active');
+
+            // Add active to selected tab
+            if (tab === 'reminders') {
+                remindersTab.classList.add('active');
+                remindersContent.classList.add('active');
+            } else if (tab === 'history') {
+                historyTab.classList.add('active');
+                historyContent.classList.add('active');
+            } else if (tab === 'calendar') {
+                calendarTab.classList.add('active');
+                calendarContent.classList.add('active');
+                // Initialize calendar when switching to calendar tab
+                if (!window.calendarInitialized) {
+                    initFlatpickr();
+                    window.calendarInitialized = true;
+                }
+            }
+        };
+
+        // Get all reminders data from backend
+        @php
+            $reminderData = $pendingReminders
+                ->map(function ($r) {
+                    return [
+                        'id' => $r->id,
+                        'title' => $r->title,
+                        'pet_name' => $r->pet->pet_name,
+                        'description' => $r->description,
+                        'category' => $r->category,
+                        'repeat_type' => $r->repeat_type,
+                        'remind_date' => $r->remind_date->format('Y-m-d'),
+                        'remind_time' => $r->remind_date->format('h:i A'),
+                        'remind_full' => $r->remind_date->format('M d, Y - h:i A'),
+                    ];
+                })
+                ->values();
+        @endphp
+        const allReminders = @json($reminderData);
+
+        // Current filter state
+        let currentSchedule = 'all';
+        let currentCategory = 'all';
+
+        // Apply combined filters
+        function applyFilters() {
+            const cards = document.querySelectorAll('#remindersContent .reminder-card-wrapper');
+
+            cards.forEach((card, index) => {
+                const reminder = allReminders[index];
+                if (!reminder) return;
+
+                const matchSchedule = currentSchedule === 'all' || reminder.repeat_type === currentSchedule;
+                const matchCategory = currentCategory === 'all' || reminder.category === currentCategory;
+
+                if (matchSchedule && matchCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter by schedule
+        window.filterBySchedule = function(schedule) {
+            currentSchedule = schedule;
+
+            // Update active state
+            const filters = document.querySelectorAll('#scheduleFilters .filter-chip');
+            filters.forEach(btn => {
+                const label = btn.textContent.trim().toLowerCase();
+                if ((schedule === 'all' && label === 'all') ||
+                    (schedule === 'none' && label === 'one-time') ||
+                    (schedule !== 'all' && schedule !== 'none' && label === schedule)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            applyFilters();
+        };
+
+        // Filter by category
+        window.filterByCategory = function(category) {
+            currentCategory = category;
+
+            // Update active state
+            const filters = document.querySelectorAll('#categoryFilters .filter-chip');
+            filters.forEach(btn => {
+                const label = btn.textContent.trim().toLowerCase();
+                if (label === category || (category === 'all' && label === 'all')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            applyFilters();
+        };
+
+        // Initialize Flatpickr
+        function initFlatpickr() {
+            // Get unique dates that have reminders
+            const reminderDates = allReminders.map(r => r.remind_date);
+
             // Initialize Flatpickr with custom config
             const calendar = flatpickr("#flatpickrCalendar", {
                 inline: true,
@@ -503,18 +704,81 @@
                 showMonths: 1,
                 monthSelectorType: "dropdown",
                 onChange: function(selectedDates, dateStr) {
-                    // Update tasks when date changes (optional)
-                    console.log("Selected date:", dateStr);
+                    // Update title and filter tasks by selected date
+                    const selectedDate = new Date(dateStr);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    selectedDate.setHours(0, 0, 0, 0);
+
+                    const titleEl = document.getElementById('selectedDateTitle');
+                    if (selectedDate.getTime() === today.getTime()) {
+                        titleEl.textContent = 'Tasks for Today';
+                    } else {
+                        const options = {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        };
+                        titleEl.textContent = 'Tasks for ' + selectedDate.toLocaleDateString('en-US', options);
+                    }
+
+                    // Filter and display tasks for selected date
+                    const tasksContainer = document.getElementById('calendarTasks');
+                    const tasksForDate = allReminders.filter(r => r.remind_date === dateStr);
+
+                    if (tasksForDate.length === 0) {
+                        tasksContainer.innerHTML =
+                            '<p class=\"text-gray-500 text-center py-8\">No tasks scheduled for this date</p>';
+                    } else {
+                        let tasksHtml = '';
+                        tasksForDate.forEach(task => {
+                            const colorMap = {
+                                feeding: 'orange',
+                                grooming: 'purple',
+                                vaccination: 'blue',
+                                medication: 'green',
+                                checkup: 'red',
+                                other: 'gray'
+                            };
+                            const iconMap = {
+                                feeding: 'cart',
+                                grooming: 'scissors',
+                                vaccination: 'syringe',
+                                medication: 'pill',
+                                checkup: 'stethoscope',
+                                other: 'bell'
+                            };
+
+                            const color = colorMap[task.category] || 'gray';
+                            const icon = iconMap[task.category] || 'bell';
+
+                            tasksHtml += `
+                                <div class="card-reminder border-l-4 border-${color} bg-white rounded-lg p-4 mb-3 shadow-sm">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="icon-box bg-${color}/10 p-2 rounded-lg">
+                                            <i class="fas fa-${icon} text-${color}"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-gray-800">${task.title}</h4>
+                                            <p class="text-sm text-gray-600">${task.pet_name}</p>
+                                            <p class="text-sm text-gray-500 mt-1">${task.description || task.category}</p>
+                                            <p class="text-xs text-gray-400 mt-2">
+                                                <i class="far fa-clock mr-1"></i>${task.remind_time}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        tasksContainer.innerHTML = tasksHtml;
+                    }
                 },
                 onDayCreate: function(dObj, dStr, fp, dayElem) {
-                    // Mark days with events (demo data - tanggal dengan reminder)
-                    const eventsOnDays = [15, 17, 18, 21, 25];
-                    const day = dayElem.dateObj.getDate();
-                    const month = dayElem.dateObj.getMonth();
-                    const currentMonth = new Date().getMonth();
+                    // Mark days with reminders
+                    const dayDate = fp.formatDate(dayElem.dateObj, 'Y-m-d');
 
-                    // Add has-event class for days with reminders
-                    if (month === currentMonth && eventsOnDays.includes(day)) {
+                    // Check if this date has any reminders
+                    if (reminderDates.includes(dayDate)) {
                         dayElem.classList.add('has-event');
                     }
                 },
@@ -548,6 +812,6 @@
                     });
                 }
             });
-        });
+        }
     </script>
 @endpush

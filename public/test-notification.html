@@ -1,0 +1,309 @@
+php<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Firebase Notifications</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #68C4CF; margin-bottom: 20px; }
+        h2 { color: #333; margin-bottom: 15px; }
+        .status { padding: 10px; border-radius: 8px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #cce5ff; color: #004085; }
+        button {
+            background: #68C4CF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #5AB0BB; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        #log { height: 300px; overflow-y: auto; }
+        .token-display {
+            word-break: break-all;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔔 Paw Time - Firebase Notification Test</h1>
+
+    <div class="card">
+        <h2>1. Check Requirements</h2>
+        <div id="requirements"></div>
+        <button onclick="checkRequirements()">Check Again</button>
+    </div>
+
+    <div class="card">
+        <h2>2. Initialize Firebase</h2>
+        <div id="firebase-status"></div>
+        <button onclick="initFirebase()">Initialize Firebase</button>
+    </div>
+
+    <div class="card">
+        <h2>3. Request Permission & Get Token</h2>
+        <div id="permission-status"></div>
+        <button onclick="requestPermission()">Request Permission</button>
+        <button onclick="getToken()">Get Token</button>
+        <div id="token-display" class="token-display" style="display: none; margin-top: 15px;"></div>
+    </div>
+
+    <div class="card">
+        <h2>4. Test Notification</h2>
+        <p>After getting a token, you can test sending notification via terminal:</p>
+        <pre>php artisan firebase:test --token=YOUR_TOKEN_HERE</pre>
+        <button onclick="showLocalNotification()">Test Local Notification</button>
+    </div>
+
+    <div class="card">
+        <h2>Console Log</h2>
+        <pre id="log"></pre>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js"></script>
+
+    <script>
+        // Configuration
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyD5Xc_ybcA5OkNLW-EeN3_cqZ5lWXswNmQ",
+            authDomain: "paw-time.firebaseapp.com",
+            projectId: "paw-time",
+            storageBucket: "paw-time.firebasestorage.app",
+            messagingSenderId: "159330113172",
+            appId: "1:159330113172:web:ad581ba6407965a88dc681"
+        };
+
+        const VAPID_KEY = "BGsl1pnkBbh_6Rt6W46zah0rH3edA_V77cBMvdPiF9bJO9cX5XbSSYTr-wCqlqH-WW89Bfph6FeKgwNCOQZRX5Q";
+
+        let messaging = null;
+        let currentToken = null;
+
+        // Get base path from current URL
+        function getBasePath() {
+            const path = window.location.pathname;
+            // Remove filename if present
+            const dir = path.substring(0, path.lastIndexOf('/'));
+            console.log('Base path:', dir);
+            return dir;
+        }
+
+        const BASE_PATH = getBasePath();
+
+        // Logging
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+            logEl.innerHTML += `[${time}] ${icon} ${message}\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type}]`, message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function setStatus(elementId, message, type) {
+            document.getElementById(elementId).innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        // Step 1: Check Requirements
+        function checkRequirements() {
+            const el = document.getElementById('requirements');
+            let html = '';
+
+            const checks = [
+                { name: 'Notification API', pass: 'Notification' in window },
+                { name: 'Service Worker', pass: 'serviceWorker' in navigator },
+                { name: 'HTTPS or localhost', pass: location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1' },
+                { name: 'Firebase SDK loaded', pass: typeof firebase !== 'undefined' },
+                { name: 'Current Permission', pass: 'Notification' in window ? Notification.permission : 'N/A', isInfo: true }
+            ];
+
+            checks.forEach(check => {
+                if (check.isInfo) {
+                    html += `<div class="status info">${check.name}: ${check.pass}</div>`;
+                } else {
+                    html += `<div class="status ${check.pass ? 'success' : 'error'}">${check.name}: ${check.pass ? '✅ OK' : '❌ FAIL'}</div>`;
+                }
+                log(`${check.name}: ${check.pass}`, check.pass === true || check.pass === 'granted' ? 'success' : check.isInfo ? 'info' : 'error');
+            });
+
+            el.innerHTML = html;
+        }
+
+        // Step 2: Initialize Firebase
+        async function initFirebase() {
+            try {
+                log('Initializing Firebase...', 'info');
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(FIREBASE_CONFIG);
+                    log('Firebase app created', 'success');
+                } else {
+                    log('Firebase app already exists', 'info');
+                }
+
+                messaging = firebase.messaging();
+                log('Firebase messaging initialized', 'success');
+
+                // Register service worker with correct path
+                const swPath = BASE_PATH + '/firebase-messaging-sw.js';
+                log('Registering service worker at: ' + swPath, 'info');
+                const registration = await navigator.serviceWorker.register(swPath);
+                log(`Service worker registered: ${registration.scope}`, 'success');
+
+                // Wait for it to be ready
+                await navigator.serviceWorker.ready;
+                log('Service worker is ready', 'success');
+
+                // Listen for foreground messages
+                messaging.onMessage((payload) => {
+                    log('Foreground message received!', 'success');
+                    log(JSON.stringify(payload, null, 2), 'info');
+                    showLocalNotification(payload.notification?.title, payload.notification?.body);
+                });
+
+                setStatus('firebase-status', '✅ Firebase initialized successfully!', 'success');
+
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                setStatus('firebase-status', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Step 3: Request Permission
+        async function requestPermission() {
+            try {
+                log('Requesting notification permission...', 'info');
+
+                const permission = await Notification.requestPermission();
+                log(`Permission result: ${permission}`, permission === 'granted' ? 'success' : 'warning');
+
+                if (permission === 'granted') {
+                    setStatus('permission-status', '✅ Permission granted!', 'success');
+                } else if (permission === 'denied') {
+                    setStatus('permission-status', '❌ Permission denied. Please enable in browser settings.', 'error');
+                } else {
+                    setStatus('permission-status', '⚠️ Permission dismissed.', 'warning');
+                }
+
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                setStatus('permission-status', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Get FCM Token
+        async function getToken() {
+            try {
+                if (!messaging) {
+                    log('Firebase not initialized. Please initialize first.', 'error');
+                    return;
+                }
+
+                log('Getting FCM token...', 'info');
+                log(`VAPID Key: ${VAPID_KEY.substring(0, 20)}...`, 'info');
+
+                const swPath = BASE_PATH + '/firebase-messaging-sw.js';
+                const registration = await navigator.serviceWorker.getRegistration(swPath);
+                if (!registration) {
+                    log('Service worker not found at: ' + swPath, 'error');
+                    return;
+                }
+
+                currentToken = await messaging.getToken({
+                    vapidKey: VAPID_KEY,
+                    serviceWorkerRegistration: registration
+                });
+
+                if (currentToken) {
+                    log('Token obtained successfully!', 'success');
+                    log(`Token: ${currentToken.substring(0, 50)}...`, 'info');
+
+                    const tokenDisplay = document.getElementById('token-display');
+                    tokenDisplay.style.display = 'block';
+                    tokenDisplay.innerHTML = `
+                        <strong>Your FCM Token:</strong><br>
+                        ${currentToken}
+                        <br><br>
+                        <button onclick="copyToken()">📋 Copy Token</button>
+                    `;
+
+                    setStatus('permission-status', '✅ Token obtained!', 'success');
+                } else {
+                    log('No token returned', 'warning');
+                }
+
+            } catch (error) {
+                log(`Error getting token: ${error.message}`, 'error');
+                log(`Full error: ${JSON.stringify(error)}`, 'error');
+            }
+        }
+
+        function copyToken() {
+            if (currentToken) {
+                navigator.clipboard.writeText(currentToken);
+                alert('Token copied to clipboard!');
+            }
+        }
+
+        // Test local notification
+        function showLocalNotification(title, body) {
+            title = title || 'Test Notification';
+            body = body || 'This is a test notification from Paw Time!';
+
+            if (Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: '/assets/image/logo.png'
+                });
+                log('Local notification shown', 'success');
+            } else {
+                log('Permission not granted for notifications', 'error');
+            }
+        }
+
+        // Auto-run checks on load
+        window.onload = function() {
+            log('Page loaded', 'info');
+            checkRequirements();
+        };
+    </script>
+</body>
+</html>

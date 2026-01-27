@@ -556,12 +556,60 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Filter Chip */
 .filter-chip {
   transition: all 0.3s ease;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #374151;
+  border: 2px solid transparent;
+}
+
+.filter-chip:hover:not(.active) {
+  background: #d1d5db;
 }
 
 .filter-chip.active {
   background: #68C4CF;
   color: white;
   border-color: #68C4CF;
+}
+
+/* Pet Card in Profile */
+.pet-card {
+  transition: all 0.3s ease;
+}
+
+.pet-card:hover {
+  transform: translateX(5px);
+  border-color: #68C4CF;
+}
+
+/* Calendar Wrapper */
+.calendar-wrapper {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Flatpickr Calendar Days with Events */
+.flatpickr-day.has-event {
+  position: relative;
+}
+
+.flatpickr-day.has-event::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: #FF8C42;
+  border-radius: 50%;
+}
+
+.flatpickr-day.has-event.selected::after,
+.flatpickr-day.has-event.today::after {
+  background-color: white;
 }
 
 /* Category Button (Modal) */
@@ -656,6 +704,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .tag-orange {
   background: #FED7AA;
   color: #EA580C;
+}
+
+/* Consultation Card */
+.consultation-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+.consultation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.consultation-card:active {
+  transform: translateY(-1px);
 }
 
 /* ===================================

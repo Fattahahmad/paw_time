@@ -31,23 +31,40 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
                 <p class="text-gray-600 mb-6">Sign in to continue caring for your pet</p>
 
-                <form class="space-y-5">
-                    <x-ui.form-input label="Email" type="email" placeholder="yourname@email.com" icon="email"
-                        id="loginEmail" :required="true" />
+                @if($errors->any())
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                        @foreach($errors->all() as $error)
+                            <p class="text-sm">{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
 
-                    <x-ui.form-input label="Password" type="password" placeholder="••••••••" icon="password"
+                @if(session('status'))
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+                        <p class="text-sm">{{ session('status') }}</p>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('auth.login') }}" class="space-y-5">
+                    @csrf
+                    <x-ui.form-input label="Email" type="email" name="email" placeholder="yourname@email.com" icon="email"
+                        id="loginEmail" :required="true" value="{{ old('email') }}" />
+
+                    <x-ui.form-input label="Password" type="password" name="password" placeholder="••••••••" icon="password"
                         id="loginPassword" :passwordToggleId="true" :required="true" />
 
                     <div class="flex items-center justify-between text-sm">
                         <label class="flex items-center cursor-pointer">
-                            <input type="checkbox"
+                            <input type="checkbox" name="remember"
                                 class="w-4 h-4 text-[#68C4CF] border-gray-300 rounded focus:ring-[#68C4CF]">
                             <span class="ml-2 text-gray-600">Remember me</span>
                         </label>
                         <a href="#" class="text-[#68C4CF] font-semibold hover:text-[#5AB0BB]">Forgot Password?</a>
                     </div>
 
-                    <x-ui.button text="Sign In" type="primary" size="md" class="w-full py-4" />
+                    <button type="submit" class="btn-primary w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg">
+                        Sign In
+                    </button>
 
                     <!-- Divider -->
                     <div class="relative my-6">
@@ -82,26 +99,29 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Create Account</h2>
                 <p class="text-gray-600 mb-6">Join us to start caring for your pet</p>
 
-                <form class="space-y-5">
-                    <x-ui.form-input label="Full Name" type="text" placeholder="John Doe" icon="user" id="fullName"
-                        :required="true" />
+                <form method="POST" action="/register" class="space-y-5">
+                    @csrf
+                    <x-ui.form-input label="Full Name" type="text" name="name" placeholder="John Doe" icon="user" id="fullName"
+                        :required="true" value="{{ old('name') }}" />
 
-                    <x-ui.form-input label="Email" type="email" placeholder="yourname@email.com" icon="email"
-                        id="registerEmail" :required="true" />
+                    <x-ui.form-input label="Email" type="email" name="email" placeholder="yourname@email.com" icon="email"
+                        id="registerEmail" :required="true" value="{{ old('email') }}" />
 
-                    <x-ui.form-input label="Password" type="password" placeholder="••••••••" icon="password"
+                    <x-ui.form-input label="Password" type="password" name="password" placeholder="••••••••" icon="password"
                         id="registerPassword" :passwordToggleId="true" :required="true" />
 
-                    <x-ui.form-input label="Confirm Password" type="password" placeholder="••••••••" icon="password"
+                    <x-ui.form-input label="Confirm Password" type="password" name="password_confirmation" placeholder="••••••••" icon="password"
                         id="confirmPassword" :passwordToggleId="true" :required="true" />
 
                     <div class="flex items-center">
-                        <input type="checkbox" class="w-4 h-4 text-[#68C4CF] border-gray-300 rounded focus:ring-[#68C4CF]">
+                        <input type="checkbox" name="terms" required class="w-4 h-4 text-[#68C4CF] border-gray-300 rounded focus:ring-[#68C4CF]">
                         <span class="ml-2 text-sm text-gray-600">I agree to the <a href="#"
                                 class="text-[#68C4CF] font-semibold hover:text-[#5AB0BB]">Terms & Conditions</a></span>
                     </div>
 
-                    <x-ui.button text="Create Account" type="primary" size="md" class="w-full py-4" />
+                    <button type="submit" class="btn-primary w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg">
+                        Create Account
+                    </button>
 
                     <!-- Google Button -->
                     <button type="button"

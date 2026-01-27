@@ -4,13 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_image',
+        'role',
     ];
 
     /**
@@ -44,5 +48,66 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get profile image URL with fallback.
+     */
+    public function getAvatarAttribute(): string
+    {
+        if ($this->profile_image && file_exists(public_path('storage/' . $this->profile_image))) {
+            return asset('storage/' . $this->profile_image);
+        }
+
+        // Fallback to UI Avatars
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=68C4CF&color=fff&size=200';
+    }
+
+    /**
+     * Get all pets for the user.
+     */
+    public function pets(): HasMany
+    {
+        return $this->hasMany(Pet::class);
+    }
+
+    /**
+     * Get all appointments for the user.
+     */
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    /**
+     * Get all reminders for the user through pets.
+     */
+    public function reminders()
+    {
+        return $this->hasManyThrough(Reminder::class, Pet::class);
+    }
+
+    /**
+     * Get all FCM tokens for the user.
+     */
+    public function fcmTokens(): HasMany
+    {
+        return $this->hasMany(FcmToken::class);
+    }
+
+    /**
+     * Get all notification logs for the user.
+     */
+    public function notificationLogs(): HasMany
+    {
+        return $this->hasMany(NotificationLog::class);
+    }
+
+    /**
+     * Get pets count attribute.
+     */
+    public function getPetsCountAttribute(): int
+    {
+        return $this->pets()->count();
     }
 }

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Paw Icon</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            font-family: Arial;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: #68C4CF;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #5AB0BB;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Paw Time Icon Generator</h1>
+        <p>Icon untuk notifikasi browser</p>
+        
+        <canvas id="canvas" width="192" height="192"></canvas>
+        
+        <div>
+            <button onclick="drawIcon('paw')">🐾 Paw Icon</button>
+            <button onclick="drawIcon('pet')">🐶 Pet Icon</button>
+            <button onclick="drawIcon('cat')">🐱 Cat Icon</button>
+        </div>
+        
+        <button onclick="downloadIcon()">📥 Download Icon (192x192)</button>
+        
+        <p style="margin-top: 20px; color: #666; font-size: 14px;">
+            Setelah download, rename file jadi <code>notification-icon.png</code><br>
+            dan replace file di folder: <code>public/assets/image/</code>
+        </p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let currentIcon = 'paw';
+
+        function drawIcon(type) {
+            currentIcon = type;
+            const size = 192;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#68C4CF');
+            gradient.addColorStop(1, '#5AB0BB');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw icon
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            if (type === 'paw') {
+                // Draw paw print
+                ctx.font = 'bold 120px Arial';
+                ctx.fillText('🐾', size/2, size/2);
+            } else if (type === 'pet') {
+                ctx.font = 'bold 120px Arial';
+                ctx.fillText('🐶', size/2, size/2);
+            } else if (type === 'cat') {
+                ctx.font = 'bold 120px Arial';
+                ctx.fillText('🐱', size/2, size/2);
+            }
+            
+            // Add "PT" text for Paw Time
+            ctx.font = 'bold 24px Arial';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillText('Paw Time', size/2, size - 20);
+        }
+
+        function downloadIcon() {
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'notification-icon.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('✅ Icon downloaded! Rename jadi "notification-icon.png" dan taruh di "public/assets/image/"');
+            });
+        }
+
+        // Draw default icon on load
+        drawIcon('paw');
+    </script>
+</body>
+</html>

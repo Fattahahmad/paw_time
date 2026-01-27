@@ -1,0 +1,1010 @@
+{
+  "info": {
+    "_postman_id": "paw-time-api-collection",
+    "name": "Paw Time API",
+    "description": "Complete API documentation for Paw Time - Pet care management app",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const jsonData = pm.response.json();",
+                  "  pm.environment.set('token', jsonData.data.token);",
+                  "  pm.environment.set('user_id', jsonData.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"password123\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout All Devices",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout-all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout-all"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Activity Feed",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard/activity?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard", "activity"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pets",
+      "item": [
+        {
+          "name": "List All Pets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets?species=dog&gender=male&search=Buddy",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"],
+              "query": [
+                {
+                  "key": "species",
+                  "value": "dog",
+                  "disabled": true
+                },
+                {
+                  "key": "gender",
+                  "value": "male",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "Buddy",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pet Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Pet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_name\": \"Buddy\",\n  \"species\": \"dog\",\n  \"breed\": \"Golden Retriever\",\n  \"gender\": \"male\",\n  \"birth_date\": \"2020-01-15\",\n  \"color\": \"Golden\",\n  \"description\": \"Friendly and energetic\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Pet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_name\": \"Buddy Updated\",\n  \"color\": \"Light Golden\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Pet",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reminders",
+      "item": [
+        {
+          "name": "List Reminders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders?pet_id=1&category=feeding&repeat_type=daily&status=pending&upcoming=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders"],
+              "query": [
+                {
+                  "key": "pet_id",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "feeding",
+                  "disabled": true,
+                  "description": "vaccination, grooming, feeding, medication, checkup, other"
+                },
+                {
+                  "key": "repeat_type",
+                  "value": "daily",
+                  "disabled": true,
+                  "description": "none, daily, weekly, monthly, yearly"
+                },
+                {
+                  "key": "schedule",
+                  "value": "daily",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "disabled": true,
+                  "description": "pending, done, skipped"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-01-20",
+                  "disabled": true
+                },
+                {
+                  "key": "date_from",
+                  "value": "2026-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "date_to",
+                  "value": "2026-01-31",
+                  "disabled": true
+                },
+                {
+                  "key": "upcoming",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "today",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reminder Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"title\": \"Feed Buddy\",\n  \"description\": \"Give breakfast and lunch\",\n  \"remind_date\": \"2026-01-20\",\n  \"remind_time\": \"08:00\",\n  \"category\": \"feeding\",\n  \"repeat_type\": \"daily\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reminders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Reminder",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Feed Buddy - Updated\",\n  \"remind_time\": \"09:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as Done",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1/done",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1", "done"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as Skipped",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1/skip",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1", "skip"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Filter Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/filters",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "filters"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Calendar Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/calendar?month=2026-01&pet_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "calendar"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "2026-01"
+                },
+                {
+                  "key": "pet_id",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Reminder",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Growth Records",
+      "item": [
+        {
+          "name": "List Growth Records",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/growth?pet_id=1&date_from=2025-01-01&date_to=2026-12-31&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth"],
+              "query": [
+                {
+                  "key": "pet_id",
+                  "value": "1"
+                },
+                {
+                  "key": "date_from",
+                  "value": "2025-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "date_to",
+                  "value": "2026-12-31",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Filter Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/growth/filters",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth", "filters"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Chart Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/growth/chart?pet_id=1&type=both&period=1y",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth", "chart"],
+              "query": [
+                {
+                  "key": "pet_id",
+                  "value": "1"
+                },
+                {
+                  "key": "type",
+                  "value": "both",
+                  "disabled": true,
+                  "description": "weight, height, both"
+                },
+                {
+                  "key": "period",
+                  "value": "1y",
+                  "disabled": true,
+                  "description": "all, 3m, 6m, 1y"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Growth Record",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/growth/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Growth Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"weight\": 28.5,\n  \"height\": 60,\n  \"record_date\": \"2026-01-19\",\n  \"notes\": \"Regular checkup at vet\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/growth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Growth Record",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"weight\": 29.0,\n  \"notes\": \"Updated weight after diet\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/growth/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Growth Record",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/growth/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "List Health Checks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks?pet_id=1&check_type=vaccination&date_from=2025-01-01",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks"],
+              "query": [
+                {
+                  "key": "pet_id",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "check_type",
+                  "value": "vaccination",
+                  "disabled": true
+                },
+                {
+                  "key": "date_from",
+                  "value": "2025-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "date_to",
+                  "value": "2026-12-31",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Filter Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/filters",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "filters"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Health Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/summary?pet_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "summary"],
+              "query": [
+                {
+                  "key": "pet_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Health Check",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"check_date\": \"2026-01-19\",\n  \"check_type\": \"vaccination\",\n  \"weight\": 28.5,\n  \"temperature\": 38.5,\n  \"diagnosis\": \"Healthy\",\n  \"treatment\": \"Rabies vaccine\",\n  \"notes\": \"Annual checkup completed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/health-checks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Health Check",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"check_type\": \"checkup\",\n  \"diagnosis\": \"All good\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Health Check",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

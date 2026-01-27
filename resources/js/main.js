@@ -266,3 +266,56 @@ window.showProfileList = function() {
   document.getElementById('profileList').classList.add('active');
   window.scrollTo(0, 0);
 }
+
+// ===================================
+// ADMIN PANEL FUNCTIONS
+// ===================================
+
+// Toggle Admin Sidebar
+window.toggleAdminSidebar = function() {
+  const sidebar = document.getElementById('adminSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const icon = document.getElementById('pawToggleIcon');
+  
+  if (!sidebar) return;
+  
+  // For desktop: toggle collapsed state
+  if (window.innerWidth >= 768) {
+    sidebar.classList.toggle('collapsed');
+    
+    // Rotate paw icon
+    if (sidebar.classList.contains('collapsed')) {
+      icon.style.transform = 'rotate(180deg)';
+    } else {
+      icon.style.transform = 'rotate(0deg)';
+    }
+  } else {
+    // For mobile: toggle mobile-show state
+    sidebar.classList.toggle('mobile-show');
+    
+    if (sidebar.classList.contains('mobile-show')) {
+      overlay.classList.remove('hidden');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    } else {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  }
+}
+
+// Close sidebar on window resize
+window.addEventListener('resize', function() {
+  const sidebar = document.getElementById('adminSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  
+  if (!sidebar) return;
+  
+  if (window.innerWidth >= 768) {
+    sidebar.classList.remove('mobile-show');
+    overlay.classList.add('hidden');
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+});
