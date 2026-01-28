@@ -1,11 +1,45 @@
 {
   "info": {
-    "_postman_id": "paw-time-api-collection",
-    "name": "Paw Time API",
-    "description": "Complete API documentation for Paw Time - Pet care management app",
+    "_postman_id": "paw-time-api-collection-complete",
+    "name": "Paw Time API - Complete Collection",
+    "description": "Complete API collection for Paw Time - Pet care management app with all endpoints including search, appointments, medical records",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "12345678"
   },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-set authorization header if token exists",
+          "if (pm.environment.get('token')) {",
+          "  pm.request.headers.add({",
+          "    key: 'Authorization',",
+          "    value: 'Bearer ' + pm.environment.get('token')",
+          "  });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://23533b975dad.ngrok-free.app",
+      "type": "string"
+    }
+  ],
   "item": [
     {
       "name": "Authentication",

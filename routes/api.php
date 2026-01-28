@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\GrowthController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\MedicalRecordController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\ReminderController;
+use App\Http\Controllers\Api\SearchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,7 +66,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::put('/user', [AuthController::class, 'updateProfile']);
         Route::put('/password', [AuthController::class, 'changePassword']);
+        Route::post('/avatar', [AuthController::class, 'uploadAvatar']);
+        Route::delete('/avatar', [AuthController::class, 'removeAvatar']);
     });
+
+    // --------------------------------------------
+    // GLOBAL SEARCH ROUTES
+    // GET /api/search              - Global search (params: q, type, limit)
+    // GET /api/search/suggestions  - Quick suggestions for autocomplete
+    // --------------------------------------------
+    Route::get('/search', [SearchController::class, 'index']);
+    Route::get('/search/suggestions', [SearchController::class, 'suggestions']);
 
     // --------------------------------------------
     // DASHBOARD ROUTES
@@ -86,7 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // --------------------------------------------
     // REMINDERS ROUTES
-    // GET    /api/reminders              - List reminders (filters: pet_id, category, repeat_type/schedule, status, date, date_from, date_to, upcoming, today)
+    // GET    /api/reminders              - List reminders (filters: pet_id, category, repeat_type/schedule, status, date, date_from, date_to, upcoming, today, search)
     // POST   /api/reminders              - Create reminder
     // GET    /api/reminders/{id}         - Get reminder detail
     // PUT    /api/reminders/{id}         - Update reminder
@@ -118,7 +131,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // --------------------------------------------
     // HEALTH CHECKS ROUTES
-    // GET    /api/health-checks              - List health checks (filters: pet_id, check_type, date_from, date_to)
+    // GET    /api/health-checks              - List health checks (filters: pet_id, check_type, date_from, date_to, search)
     // GET    /api/health-checks/filters      - Get filter options
     // GET    /api/health-checks/summary      - Get health summary (requires: pet_id)
     // POST   /api/health-checks              - Create health check
@@ -129,6 +142,38 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/health-checks/filters', [HealthController::class, 'filters']);
     Route::get('/health-checks/summary', [HealthController::class, 'summary']);
     Route::apiResource('health-checks', HealthController::class);
+
+    // --------------------------------------------
+    // APPOINTMENTS ROUTES
+    // GET    /api/appointments              - List appointments (filters: pet_id, status, date_from, date_to, search, upcoming)
+    // GET    /api/appointments/filters      - Get filter options
+    // POST   /api/appointments              - Create appointment
+    // GET    /api/appointments/{id}         - Get appointment detail
+    // PUT    /api/appointments/{id}         - Update appointment
+    // DELETE /api/appointments/{id}         - Delete appointment
+    // PATCH  /api/appointments/{id}/cancel  - Cancel appointment
+    // PATCH  /api/appointments/{id}/confirm - Confirm appointment
+    // PATCH  /api/appointments/{id}/complete - Complete appointment
+    // --------------------------------------------
+    Route::get('/appointments/filters', [AppointmentController::class, 'filters']);
+    Route::patch('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel']);
+    Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirm']);
+    Route::patch('/appointments/{appointment}/complete', [AppointmentController::class, 'complete']);
+    Route::apiResource('appointments', AppointmentController::class);
+
+    // --------------------------------------------
+    // MEDICAL RECORDS ROUTES
+    // GET    /api/medical-records                     - List medical records (filters: pet_id, appointment_id, search, date_from, date_to)
+    // GET    /api/medical-records/pet/{pet}           - Get records by pet
+    // POST   /api/medical-records                     - Create medical record
+    // GET    /api/medical-records/{id}                - Get medical record detail
+    // PUT    /api/medical-records/{id}                - Update medical record
+    // DELETE /api/medical-records/{id}                - Delete medical record
+    // DELETE /api/medical-records/{id}/attachments/{index} - Remove attachment
+    // --------------------------------------------
+    Route::get('/medical-records/pet/{pet}', [MedicalRecordController::class, 'byPet']);
+    Route::delete('/medical-records/{medicalRecord}/attachments/{index}', [MedicalRecordController::class, 'removeAttachment']);
+    Route::apiResource('medical-records', MedicalRecordController::class);
 
     // --------------------------------------------
     // NOTIFICATION ROUTES

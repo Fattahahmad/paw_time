@@ -7,13 +7,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
      * Register a new user.
-     * 
+     *
      * POST /api/auth/register
      */
     public function register(Request $request)
@@ -49,7 +50,7 @@ class AuthController extends Controller
 
     /**
      * Login user and create token.
-     * 
+     *
      * POST /api/auth/login
      */
     public function login(Request $request)
@@ -91,7 +92,7 @@ class AuthController extends Controller
 
     /**
      * Logout user (revoke token).
-     * 
+     *
      * POST /api/auth/logout
      */
     public function logout(Request $request)
@@ -106,7 +107,7 @@ class AuthController extends Controller
 
     /**
      * Logout from all devices (revoke all tokens).
-     * 
+     *
      * POST /api/auth/logout-all
      */
     public function logoutAll(Request $request)
@@ -121,13 +122,13 @@ class AuthController extends Controller
 
     /**
      * Get authenticated user profile.
-     * 
+     *
      * GET /api/auth/user
      */
     public function user(Request $request)
     {
         $user = $request->user();
-        
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -142,7 +143,7 @@ class AuthController extends Controller
 
     /**
      * Update user profile.
-     * 
+     *
      * PUT /api/auth/user
      */
     public function updateProfile(Request $request)
@@ -169,7 +170,7 @@ class AuthController extends Controller
 
     /**
      * Change user password.
-     * 
+     *
      * PUT /api/auth/password
      */
     public function changePassword(Request $request)
@@ -195,6 +196,66 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Password changed successfully',
+        ]);
+    }
+
+    /**
+     * Upload user profile photo.
+     *
+     * POST /api/auth/avatar
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = $request->user();
+
+        // Delete old avatar if exists
+        if ($user->profile_image) {
+            $oldPath = str_replace('/storage/', '', $user->profile_image);
+            Storage::disk('public')->delete($oldPath);
+        }
+
+        // Store new avatar
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->update(['profile_image' => Storage::url($path)]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar uploaded successfully',
+            'data' => [
+                'avatar_url' => url($user->profile_image),
+            ]
+        ]);
+    }
+
+    /**
+     * Remove user profile photo.
+     *
+     * DELETE /api/auth/avatar
+     */
+    public function removeAvatar(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->profile_image) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No avatar to remove',
+            ], 400);
+        }
+
+        // Delete avatar from storage
+        $path = str_replace('/storage/', '', $user->profile_image);
+        Storage::disk('public')->delete($path);
+
+        $user->update(['profile_image' => null]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar removed successfully',
         ]);
     }
 }

@@ -45,6 +45,15 @@ class ReminderController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Search by title or description
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                  ->orWhere('description', 'like', "%{$searchTerm}%");
+            });
+        }
+
         // Filter by specific date
         if ($request->has('date')) {
             $query->whereDate('remind_date', $request->date);

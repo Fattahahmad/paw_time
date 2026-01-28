@@ -36,8 +36,9 @@ class HealthController extends Controller
         $doctorInfo = [
             'name' => 'drh. Khoirunissa Pangesti',
             'specialty' => 'Veterinary',
-            'rating' => 4.8,, 'appointments'
-            'whatsapp' => '6282136666170', // Change this to actual number
+            'rating' => 4.8,
+            'appointments' => 1250,
+            'whatsapp' => '6282136666170',
             'tags' => ['Pet behaviors', 'Pet Food', 'Pet Treatments'],
             'image' => 'assets/image/doctor.png',
             'description' => 'drh. Khoirunissa Pangesti is a highly experienced veterinarian with 8 years of dedicated practice, showcasing a profound commitment to animal care.',

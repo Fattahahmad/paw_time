@@ -30,6 +30,17 @@ class HealthController extends Controller
             $query->where('check_type', $request->check_type);
         }
 
+        // Search by diagnosis, treatment, or notes
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('diagnosis', 'like', "%{$searchTerm}%")
+                  ->orWhere('treatment', 'like', "%{$searchTerm}%")
+                  ->orWhere('notes', 'like', "%{$searchTerm}%")
+                  ->orWhere('check_type', 'like', "%{$searchTerm}%");
+            });
+        }
+
         // Filter by date range
         if ($request->has('date_from')) {
             $query->whereDate('check_date', '>=', $request->date_from);

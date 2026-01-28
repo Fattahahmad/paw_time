@@ -1,0 +1,1154 @@
+{
+  "info": {
+    "_postman_id": "paw-time-api-v2",
+    "name": "Paw Time API - Complete v2",
+    "description": "Complete API documentation for Paw Time with auto-token and dual format examples",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Register (Raw JSON)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register (Form Data)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Test User",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "test@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "password123",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login (Raw JSON) - Auto Save Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    pm.collectionVariables.set('user_id', jsonData.data.user.id);",
+                  "    console.log('✅ Token auto-saved:', jsonData.data.token);",
+                  "    console.log('✅ User ID:', jsonData.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@admin.com\",\n  \"password\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login (Form Data) - Auto Save Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    pm.collectionVariables.set('user_id', jsonData.data.user.id);",
+                  "    console.log('✅ Token auto-saved:', jsonData.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "admin@admin.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "admin",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "user"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🐾 Pets Management",
+      "item": [
+        {
+          "name": "Get All Pets",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"]
+            }
+          }
+        },
+        {
+          "name": "Get Pet Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Pet (Form Data with Image)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "pet_name",
+                  "value": "Fluffy",
+                  "type": "text"
+                },
+                {
+                  "key": "species",
+                  "value": "Cat",
+                  "type": "text",
+                  "description": "Dog, Cat, Bird, etc"
+                },
+                {
+                  "key": "breed",
+                  "value": "Persian",
+                  "type": "text"
+                },
+                {
+                  "key": "birth_date",
+                  "value": "2023-01-15",
+                  "type": "text"
+                },
+                {
+                  "key": "gender",
+                  "value": "Female",
+                  "type": "text",
+                  "description": "Male or Female"
+                },
+                {
+                  "key": "color",
+                  "value": "White",
+                  "type": "text"
+                },
+                {
+                  "key": "weight",
+                  "value": "4.5",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "Pet photo (optional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"]
+            }
+          }
+        },
+        {
+          "name": "Create Pet (Raw JSON without Image)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_name\": \"Buddy\",\n  \"species\": \"Dog\",\n  \"breed\": \"Golden Retriever\",\n  \"birth_date\": \"2022-05-10\",\n  \"gender\": \"Male\",\n  \"color\": \"Golden\",\n  \"weight\": 25.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets"]
+            }
+          }
+        },
+        {
+          "name": "Update Pet (Form Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "_method",
+                  "value": "PUT",
+                  "type": "text",
+                  "description": "Required for Laravel PUT with form-data"
+                },
+                {
+                  "key": "pet_name",
+                  "value": "Fluffy Updated",
+                  "type": "text"
+                },
+                {
+                  "key": "weight",
+                  "value": "5.0",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "New photo (optional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Pet (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_name\": \"Buddy Updated\",\n  \"weight\": 26.0,\n  \"color\": \"Light Golden\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Pet",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📈 Growth Tracking",
+      "item": [
+        {
+          "name": "Get Pet Growth Records",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pets/1/growth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pets", "1", "growth"]
+            }
+          }
+        },
+        {
+          "name": "Add Growth Record (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"record_date\": \"2026-01-27\",\n  \"weight\": 5.2,\n  \"height\": 30.5,\n  \"notes\": \"Growing healthy\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/growth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth"]
+            }
+          }
+        },
+        {
+          "name": "Add Growth Record (Form Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "pet_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "record_date",
+                  "value": "2026-01-27",
+                  "type": "text"
+                },
+                {
+                  "key": "weight",
+                  "value": "5.2",
+                  "type": "text"
+                },
+                {
+                  "key": "height",
+                  "value": "30.5",
+                  "type": "text"
+                },
+                {
+                  "key": "notes",
+                  "value": "Growing healthy",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/growth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "growth"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Reminders",
+      "item": [
+        {
+          "name": "Get All Reminders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/reminders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders"]
+            }
+          }
+        },
+        {
+          "name": "Create Reminder (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"title\": \"Vaccination Reminder\",\n  \"description\": \"Rabies vaccine due\",\n  \"remind_date\": \"2026-02-15 10:00:00\",\n  \"category\": \"vaccination\",\n  \"repeat_type\": \"yearly\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reminders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders"]
+            }
+          }
+        },
+        {
+          "name": "Create Reminder (Form Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "pet_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Grooming Appointment",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Monthly grooming session",
+                  "type": "text"
+                },
+                {
+                  "key": "remind_date",
+                  "value": "2026-02-01 14:00:00",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "grooming",
+                  "type": "text",
+                  "description": "vaccination, grooming, feeding, medication, checkup, other"
+                },
+                {
+                  "key": "repeat_type",
+                  "value": "monthly",
+                  "type": "text",
+                  "description": "none, daily, weekly, monthly, yearly"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "type": "text",
+                  "description": "pending, done, skipped"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reminders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders"]
+            }
+          }
+        },
+        {
+          "name": "Update Reminder (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Vaccination Reminder Updated\",\n  \"remind_date\": \"2026-02-20 10:00:00\",\n  \"status\": \"done\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Mark Reminder as Done",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1/done",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1", "done"]
+            }
+          }
+        },
+        {
+          "name": "Delete Reminder",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/reminders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reminders", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏥 Health Records",
+      "item": [
+        {
+          "name": "Get All Health Checks",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks"]
+            }
+          }
+        },
+        {
+          "name": "Get Health Check Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Health Check (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pet_id\": 1,\n  \"check_date\": \"2026-01-27\",\n  \"complaint\": \"Sneezing and runny nose\",\n  \"diagnosis\": \"Upper respiratory infection\",\n  \"treatment\": \"Antibiotics and rest\",\n  \"prescription\": \"Amoxicillin 250mg 2x daily for 7 days\",\n  \"notes\": \"Monitor temperature\",\n  \"next_visit_date\": \"2026-02-03\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/health-checks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks"]
+            }
+          }
+        },
+        {
+          "name": "Create Health Check (Form Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "pet_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "check_date",
+                  "value": "2026-01-27",
+                  "type": "text"
+                },
+                {
+                  "key": "complaint",
+                  "value": "Loss of appetite",
+                  "type": "text"
+                },
+                {
+                  "key": "diagnosis",
+                  "value": "Mild gastritis",
+                  "type": "text"
+                },
+                {
+                  "key": "treatment",
+                  "value": "Diet change and medication",
+                  "type": "text"
+                },
+                {
+                  "key": "prescription",
+                  "value": "Ranitidine 10mg once daily",
+                  "type": "text"
+                },
+                {
+                  "key": "notes",
+                  "value": "Feed smaller portions",
+                  "type": "text"
+                },
+                {
+                  "key": "next_visit_date",
+                  "value": "2026-02-10",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/health-checks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks"]
+            }
+          }
+        },
+        {
+          "name": "Update Health Check (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Condition improving\",\n  \"next_visit_date\": \"2026-02-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Health Check",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health-checks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health-checks", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Push Notifications",
+      "item": [
+        {
+          "name": "Register FCM Token (Raw JSON)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"YOUR_FCM_TOKEN_HERE\",\n  \"device_type\": \"android\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notifications/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register FCM Token (Form Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "token",
+                  "value": "YOUR_FCM_TOKEN_HERE",
+                  "type": "text"
+                },
+                {
+                  "key": "device_type",
+                  "value": "android",
+                  "type": "text",
+                  "description": "android, ios, or web"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notifications/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Notification Logs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/notifications",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
