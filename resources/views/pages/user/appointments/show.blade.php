@@ -29,13 +29,13 @@
                     <h3 class="font-bold text-gray-800 mb-4 text-lg">Pet Information</h3>
                     <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-4">
                         <span class="text-4xl">
-                            @if($appointment->pet->pet_type === 'Cat')
+                            @if(strtolower($appointment->pet->species) === 'cat')
                                 🐱
-                            @elseif($appointment->pet->pet_type === 'Dog')
+                            @elseif(strtolower($appointment->pet->species) === 'dog')
                                 🐶
-                            @elseif($appointment->pet->pet_type === 'Bird')
+                            @elseif(strtolower($appointment->pet->species) === 'bird')
                                 🦜
-                            @elseif($appointment->pet->pet_type === 'Rabbit')
+                            @elseif(strtolower($appointment->pet->species) === 'rabbit')
                                 🐰
                             @else
                                 🐾
@@ -43,7 +43,7 @@
                         </span>
                         <div>
                             <p class="font-semibold text-lg">{{ $appointment->pet->pet_name }}</p>
-                            <p class="text-gray-600">{{ $appointment->pet->pet_type }} - {{ $appointment->pet->pet_breed }}</p>
+                            <p class="text-gray-600">{{ $appointment->pet->species }} - {{ $appointment->pet->breed }}</p>
                         </div>
                     </div>
                 </div>

@@ -8,13 +8,13 @@
             <p class="text-sm text-gray-600">{{ $appointment->user->name }}</p>
         </div>
         <span class="text-xl">
-            @if($appointment->pet->pet_type === 'Cat')
+            @if(strtolower($appointment->pet->species) === 'cat')
                 🐱
-            @elseif($appointment->pet->pet_type === 'Dog')
+            @elseif(strtolower($appointment->pet->species) === 'dog')
                 🐶
-            @elseif($appointment->pet->pet_type === 'Bird')
+            @elseif(strtolower($appointment->pet->species) === 'bird')
                 🦜
-            @elseif($appointment->pet->pet_type === 'Rabbit')
+            @elseif(strtolower($appointment->pet->species) === 'rabbit')
                 🐰
             @else
                 🐾

@@ -46,7 +46,7 @@
                         <option value="">Select Pet</option>
                         @foreach($pets as $pet)
                             <option value="{{ $pet->id }}" data-user-id="{{ $pet->user_id }}" {{ old('pet_id') == $pet->id ? 'selected' : '' }}>
-                                {{ $pet->pet_name }} ({{ $pet->pet_type }})
+                                {{ $pet->pet_name }} ({{ $pet->species }})
                             </option>
                         @endforeach
                     </select>

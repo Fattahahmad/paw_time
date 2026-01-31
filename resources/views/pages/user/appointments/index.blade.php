@@ -16,13 +16,13 @@
                             <div class="flex-1">
                                 <div class="flex items-center gap-3 mb-3">
                                     <span class="text-3xl">
-                                        @if($appointment->pet->pet_type === 'Cat')
+                                        @if(strtolower($appointment->pet->species) === 'cat')
                                             🐱
-                                        @elseif($appointment->pet->pet_type === 'Dog')
+                                        @elseif(strtolower($appointment->pet->species) === 'dog')
                                             🐶
-                                        @elseif($appointment->pet->pet_type === 'Bird')
+                                        @elseif(strtolower($appointment->pet->species) === 'bird')
                                             🦜
-                                        @elseif($appointment->pet->pet_type === 'Rabbit')
+                                        @elseif(strtolower($appointment->pet->species) === 'rabbit')
                                             🐰
                                         @else
                                             🐾
@@ -30,7 +30,7 @@
                                     </span>
                                     <div>
                                         <h3 class="font-bold text-lg text-gray-900">{{ $appointment->pet->pet_name }}</h3>
-                                        <p class="text-sm text-gray-600">{{ $appointment->pet->pet_type }}</p>
+                                        <p class="text-sm text-gray-600">{{ $appointment->pet->species }}</p>
                                     </div>
                                 </div>
 

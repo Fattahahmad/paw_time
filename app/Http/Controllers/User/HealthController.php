@@ -44,7 +44,7 @@ class HealthController extends Controller
             'description' => 'drh. Khoirunissa Pangesti is a highly experienced veterinarian with 8 years of dedicated practice, showcasing a profound commitment to animal care.',
         ];
 
-        return view('pages.user.health', compact('user', 'pets', 'consultations', 'doctorInfo'));
+        return view('pages.user.health', compact('user', 'pets', 'consultations', 'appointments', 'doctorInfo'));
     }
 
     /**

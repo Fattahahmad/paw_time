@@ -310,6 +310,32 @@
         .calendar-wrapper {
             display: flex;
             justify-content: center;
+            padding: 0 1rem;
+            overflow: hidden;
+        }
+
+        /* Responsive calendar container */
+        @media (max-width: 480px) {
+            .calendar-wrapper {
+                padding: 0 0.5rem;
+            }
+            
+            .flatpickr-calendar {
+                max-width: 100%;
+                font-size: 13px;
+                padding: 0.5rem;
+            }
+            
+            .flatpickr-day {
+                height: 36px;
+                line-height: 36px;
+                font-size: 12px;
+            }
+            
+            .flatpickr-weekday {
+                font-size: 11px;
+                padding: 6px 0;
+            }
         }
 
         /* Custom Flatpickr Styles - Minimal overrides */
@@ -318,7 +344,39 @@
             border: none;
             background: white;
             border-radius: 1rem;
-            padding: 1rem;
+            padding: 0.75rem;
+            max-width: 320px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        /* Calendar Container Responsive */
+        .flatpickr-calendar .flatpickr-rContainer {
+            width: 100%;
+        }
+
+        /* Days Grid - Proper sizing */
+        .flatpickr-days {
+            width: 100%;
+        }
+
+        .flatpickr-day {
+            max-width: none;
+            width: calc(100% / 7);
+            height: 40px;
+            line-height: 40px;
+            font-size: 13px;
+        }
+
+        /* Weekdays - Proper sizing */
+        .flatpickr-weekdays {
+            width: 100%;
+        }
+
+        .flatpickr-weekday {
+            width: calc(100% / 7);
+            font-size: 12px;
+            padding: 8px 0;
         }
 
         /* Month Navigation - Custom Arrow Styling */
@@ -442,13 +500,17 @@
             background: #93C5FD;
             border-radius: 0.5rem;
             margin-top: 0.5rem;
+            width: 100%;
         }
 
         .flatpickr-weekday {
             background: transparent;
             color: white;
-            font-size: 0.75rem;
+            font-size: 12px;
             font-weight: 600;
+            width: calc(100% / 7);
+            padding: 8px 0;
+            text-align: center;
         }
 
         /* Calendar Days */
@@ -457,6 +519,12 @@
             border: none;
             font-weight: 500;
             border-radius: 50%;
+            max-width: none;
+            width: calc(100% / 7);
+            height: 40px;
+            line-height: 40px;
+            font-size: 13px;
+            margin: 1px;
         }
 
         .flatpickr-day:hover {

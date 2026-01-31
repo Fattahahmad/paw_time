@@ -29,7 +29,7 @@
                             <span class="text-2xl">🐾</span>
                             <div>
                                 <p class="font-semibold">{{ $appointment->pet->pet_name }}</p>
-                                <p class="text-sm text-gray-600">{{ $appointment->pet->pet_type }} - {{ $appointment->pet->pet_breed }}</p>
+                                <p class="text-sm text-gray-600">{{ $appointment->pet->species }} - {{ $appointment->pet->breed }}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 mt-3">

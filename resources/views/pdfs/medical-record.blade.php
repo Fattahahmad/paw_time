@@ -77,11 +77,11 @@
         </div>
         <div class="info-row">
             <span class="info-label">Pet Type:</span>
-            <span class="info-value">{{ $medicalRecord->appointment->pet->pet_type }}</span>
+            <span class="info-value">{{ $medicalRecord->appointment->pet->species }}</span>
         </div>
         <div class="info-row">
             <span class="info-label">Breed:</span>
-            <span class="info-value">{{ $medicalRecord->appointment->pet->pet_breed ?? 'N/A' }}</span>
+            <span class="info-value">{{ $medicalRecord->appointment->pet->breed ?? 'N/A' }}</span>
         </div>
         <div class="info-row">
             <span class="info-label">Owner:</span>
