@@ -131,7 +131,7 @@
                             <p class="text-sm text-gray-600">{{ $appointment->medicalRecord->attachment_count }} file(s) attached</p>
                             <div class="mt-2 space-y-2">
                                 @foreach($appointment->medicalRecord->attachments as $attachment)
-                                    <a href="{{ asset('storage/' . $attachment) }}" target="_blank" 
+                                    <a href="{{ asset('storage/' . $attachment) }}" target="_blank"
                                        class="text-sm text-cyan-600 hover:text-cyan-800 block">
                                         📎 {{ basename($attachment) }}
                                     </a>
@@ -142,11 +142,11 @@
                     @endif
 
                     <div class="flex gap-3">
-                        <a href="{{ route('admin.medical-records.download', $appointment->medicalRecord) }}" 
+                        <a href="{{ route('admin.medical-records.download', $appointment->medicalRecord) }}"
                            class="btn-primary">
                             📄 Download PDF
                         </a>
-                        <button onclick="document.getElementById('medical-record-form').style.display='block'" 
+                        <button onclick="document.getElementById('medical-record-form').style.display='block'"
                                 class="btn-secondary">
                             ✏️ Edit Medical Record
                         </button>
@@ -156,7 +156,7 @@
                     <form id="medical-record-form" action="{{ route('admin.medical-records.store') }}" method="POST" enctype="multipart/form-data" style="display: none;" class="mt-6 pt-6 border-t">
                         @csrf
                         <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                        
+
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis *</label>
@@ -172,12 +172,12 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Attachments (Max 5 files, 10MB each)</label>
-                                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf" 
+                                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">
                             </div>
                             <div class="flex gap-3">
                                 <button type="submit" class="btn-primary">Update Medical Record</button>
-                                <button type="button" onclick="document.getElementById('medical-record-form').style.display='none'" 
+                                <button type="button" onclick="document.getElementById('medical-record-form').style.display='none'"
                                         class="btn-secondary">Cancel</button>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                     <form action="{{ route('admin.medical-records.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                        
+
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis <span class="text-red-500">*</span></label>
@@ -214,7 +214,7 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Attachments (Max 5 files, 10MB each)</label>
-                                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf" 
+                                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">
                                 <p class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG, PDF</p>
                             </div>

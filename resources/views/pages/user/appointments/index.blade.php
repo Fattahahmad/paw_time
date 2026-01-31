@@ -57,17 +57,17 @@
 
                                 @if($appointment->status === 'completed' && $appointment->medicalRecord)
                                     <div class="flex gap-2 mt-3">
-                                        <a href="{{ route('user.appointments.show', $appointment) }}" 
+                                        <a href="{{ route('user.appointments.show', $appointment) }}"
                                            class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 text-sm font-medium transition-colors">
                                             View Details & Medical Record
                                         </a>
-                                        <a href="{{ route('user.medical-records.download', $appointment->medicalRecord) }}" 
+                                        <a href="{{ route('user.medical-records.download', $appointment->medicalRecord) }}"
                                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium transition-colors">
                                             📄 Download PDF
                                         </a>
                                     </div>
                                 @else
-                                    <a href="{{ route('user.appointments.show', $appointment) }}" 
+                                    <a href="{{ route('user.appointments.show', $appointment) }}"
                                        class="inline-block px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium transition-colors mt-3">
                                         View Details
                                     </a>

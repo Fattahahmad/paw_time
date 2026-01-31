@@ -1,6 +1,6 @@
 @props(['appointment'])
 
-<a href="{{ route('admin.appointments.show', $appointment) }}" 
+<a href="{{ route('admin.appointments.show', $appointment) }}"
    class="block bg-white rounded-xl p-4 hover:shadow-md transition-shadow border border-gray-200">
     <div class="flex items-start justify-between mb-2">
         <div class="flex-1">

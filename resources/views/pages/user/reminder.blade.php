@@ -319,19 +319,19 @@
             .calendar-wrapper {
                 padding: 0 0.5rem;
             }
-            
+
             .flatpickr-calendar {
                 max-width: 100%;
                 font-size: 13px;
                 padding: 0.5rem;
             }
-            
+
             .flatpickr-day {
                 height: 36px;
                 line-height: 36px;
                 font-size: 12px;
             }
-            
+
             .flatpickr-weekday {
                 font-size: 11px;
                 padding: 6px 0;

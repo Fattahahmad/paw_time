@@ -89,11 +89,11 @@
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">Medical Record</h2>
                     <div class="flex gap-2">
-                        <a href="{{ route('user.medical-records.download', $appointment->medicalRecord) }}" 
+                        <a href="{{ route('user.medical-records.download', $appointment->medicalRecord) }}"
                            class="px-6 py-3 bg-cyan-600 text-white rounded-xl hover:bg-cyan-700 font-semibold transition-colors">
                             📄 Download PDF
                         </a>
-                        <a href="{{ route('user.medical-records.download', $appointment->medicalRecord) }}" 
+                        <a href="{{ route('user.medical-records.download', $appointment->medicalRecord) }}"
                            target="_blank"
                            class="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-semibold transition-colors">
                             🖨️ Print
@@ -143,7 +143,7 @@
                         <div class="bg-gray-50 rounded-xl p-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 @foreach($appointment->medicalRecord->attachments as $attachment)
-                                    <a href="{{ asset('storage/' . $attachment) }}" 
+                                    <a href="{{ asset('storage/' . $attachment) }}"
                                        target="_blank"
                                        class="flex items-center gap-2 p-3 bg-white border border-gray-200 rounded-lg hover:border-cyan-500 hover:shadow-sm transition-all">
                                         <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -21,7 +21,7 @@
                     <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">
                         Pet Owner <span class="text-red-500">*</span>
                     </label>
-                    <select name="user_id" id="user_id" required 
+                    <select name="user_id" id="user_id" required
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                             onchange="filterPets()">
                         <option value="">Select Owner</option>
@@ -41,7 +41,7 @@
                     <label for="pet_id" class="block text-sm font-medium text-gray-700 mb-2">
                         Pet <span class="text-red-500">*</span>
                     </label>
-                    <select name="pet_id" id="pet_id" required 
+                    <select name="pet_id" id="pet_id" required
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
                         <option value="">Select Pet</option>
                         @foreach($pets as $pet)
@@ -100,13 +100,13 @@
             const userId = document.getElementById('user_id').value;
             const petSelect = document.getElementById('pet_id');
             const options = petSelect.querySelectorAll('option');
-            
+
             options.forEach(option => {
                 if (option.value === '') {
                     option.style.display = 'block';
                     return;
                 }
-                
+
                 const petUserId = option.getAttribute('data-user-id');
                 if (userId === '' || petUserId === userId) {
                     option.style.display = 'block';
@@ -114,7 +114,7 @@
                     option.style.display = 'none';
                 }
             });
-            
+
             petSelect.value = '';
         }
 

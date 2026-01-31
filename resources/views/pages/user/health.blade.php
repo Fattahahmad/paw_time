@@ -61,7 +61,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <a href="{{ route('user.appointments.show', $appointment) }}" 
+                                <a href="{{ route('user.appointments.show', $appointment) }}"
                                    class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 text-sm font-medium transition-colors">
                                     View
                                 </a>
