@@ -14,24 +14,24 @@
             <form action="{{ route('admin.reminders.store') }}" method="POST">
                 @csrf
 
-                {{-- Pet Selection --}}
+                {{-- User Selection --}}
                 <div class="space-y-4 mb-6">
                     <h4 class="font-semibold text-gray-700 flex items-center space-x-2">
-                        <span class="text-xl">🐾</span>
-                        <span>Select Pet</span>
+                        <span class="text-xl">👤</span>
+                        <span>Select User</span>
                     </h4>
 
                     <div class="form-group">
-                        <label class="form-label">Pet *</label>
-                        <select name="pet_id" class="form-select" required>
-                            <option value="">Choose pet</option>
-                            @foreach($pets as $pet)
-                                <option value="{{ $pet->id }}" {{ old('pet_id') == $pet->id ? 'selected' : '' }}>
-                                    {{ $pet->pet_name }} ({{ $pet->user->name ?? 'No owner' }})
+                        <label class="form-label">User *</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">Choose user</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }} ({{ $user->email }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('pet_id')
+                        @error('user_id')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>

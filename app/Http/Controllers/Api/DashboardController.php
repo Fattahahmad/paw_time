@@ -21,32 +21,30 @@ class DashboardController extends Controller
 
         // Get stats
         $totalPets = $user->pets()->count();
-        $totalReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))->count();
-        $pendingReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $totalReminders = Reminder::where('user_id', $user->id)->count();
+        $pendingReminders = Reminder::where('user_id', $user->id)
             ->where('status', 'pending')->count();
-        $completedReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $completedReminders = Reminder::where('user_id', $user->id)
             ->where('status', 'done')->count();
 
         // Upcoming reminders (next 7 days)
-        $upcomingReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $upcomingReminders = Reminder::where('user_id', $user->id)
             ->where('status', 'pending')
             ->whereDate('remind_date', '>=', now())
             ->whereDate('remind_date', '<=', now()->addDays(7))
-            ->with('pet:id,pet_name,species,image_url')
             ->orderBy('remind_date', 'asc')
             ->limit(5)
             ->get();
 
         // Today's reminders
-        $todayReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $todayReminders = Reminder::where('user_id', $user->id)
             ->where('status', 'pending')
             ->whereDate('remind_date', now())
-            ->with('pet:id,pet_name,species,image_url')
             ->orderBy('remind_date', 'asc')
             ->get();
 
         // Overdue reminders
-        $overdueReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $overdueReminders = Reminder::where('user_id', $user->id)
             ->where('status', 'pending')
             ->whereDate('remind_date', '<', now())
             ->count();
@@ -87,12 +85,12 @@ class DashboardController extends Controller
             'success' => true,
             'data' => [
                 'total_pets' => $user->pets()->count(),
-                'pending_reminders' => Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+                'pending_reminders' => Reminder::where('user_id', $user->id)
                     ->where('status', 'pending')->count(),
-                'today_tasks' => Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+                'today_tasks' => Reminder::where('user_id', $user->id)
                     ->where('status', 'pending')
                     ->whereDate('remind_date', now())->count(),
-                'overdue_tasks' => Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+                'overdue_tasks' => Reminder::where('user_id', $user->id)
                     ->where('status', 'pending')
                     ->whereDate('remind_date', '<', now())->count(),
                 'health_checks_this_month' => HealthCheck::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
@@ -113,16 +111,15 @@ class DashboardController extends Controller
         $limit = $request->get('limit', 10);
 
         // Get recent completed reminders
-        $completedReminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $completedReminders = Reminder::where('user_id', $user->id)
             ->where('status', 'done')
-            ->with('pet:id,pet_name')
             ->orderBy('updated_at', 'desc')
             ->limit($limit)
             ->get()
             ->map(function ($r) {
                 return [
                     'type' => 'reminder_completed',
-                    'message' => "Completed: {$r->title} for {$r->pet->pet_name}",
+                    'message' => "Completed: {$r->title}",
                     'category' => $r->category,
                     'date' => $r->updated_at,
                 ];
@@ -167,12 +164,6 @@ class DashboardController extends Controller
             'remind_time' => $reminder->remind_date->format('H:i'),
             'remind_formatted' => $reminder->remind_date->format('M d - h:i A'),
             'status' => $reminder->status,
-            'pet' => [
-                'id' => $reminder->pet->id,
-                'name' => $reminder->pet->pet_name,
-                'species' => $reminder->pet->species,
-                'image_url' => $reminder->pet->image_url ? url($reminder->pet->image_url) : null,
-            ],
         ];
     }
 

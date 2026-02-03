@@ -99,7 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // --------------------------------------------
     // REMINDERS ROUTES
-    // GET    /api/reminders              - List reminders (filters: pet_id, category, repeat_type/schedule, status, date, date_from, date_to, upcoming, today, search)
+    // GET    /api/reminders              - List reminders (filters: category, repeat_type/schedule, status, date, date_from, date_to, upcoming, today, search)
     // POST   /api/reminders              - Create reminder
     // GET    /api/reminders/{id}         - Get reminder detail
     // PUT    /api/reminders/{id}         - Update reminder

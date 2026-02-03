@@ -102,7 +102,7 @@
                     $color = $colorMap[$reminder->category] ?? 'gray';
                 @endphp
                 <div class="reminder-card-wrapper" data-category="{{ $reminder->category }}">
-                    <x-cards.reminder-card :title="$reminder->title" :pet="$reminder->pet->pet_name" :detail="$reminder->description ?? ucfirst($reminder->category)" :time="$reminder->remind_date->format('M d, Y - h:i A')"
+                    <x-cards.reminder-card :title="$reminder->title" :detail="$reminder->description ?? ucfirst($reminder->category)" :time="$reminder->remind_date->format('M d, Y - h:i A')"
                         :icon="$icon" :iconBg="$color" :borderColor="$color" :showActions="true">
                         <x-slot:actions>
                             <form action="{{ route('user.reminders.done', $reminder->id) }}" method="POST" class="inline">
@@ -166,7 +166,7 @@
                         $icon = $iconMap[$reminder->category] ?? 'bell';
                         $color = $colorMap[$reminder->category] ?? 'gray';
                     @endphp
-                    <x-cards.reminder-card :title="$reminder->title" :pet="$reminder->pet->pet_name" :time="$reminder->remind_date->format('h:i A')" :icon="$icon"
+                    <x-cards.reminder-card :title="$reminder->title" :time="$reminder->remind_date->format('h:i A')" :icon="$icon"
                         :iconBg="$color" :borderColor="$color" />
                 @empty
                     <p class="text-center text-gray-500 py-4">No tasks for today</p>
@@ -202,7 +202,7 @@
                         $icon = $iconMap[$reminder->category] ?? 'bell';
                         $color = $colorMap[$reminder->category] ?? 'gray';
                     @endphp
-                    <x-cards.reminder-card :title="$reminder->title" :pet="$reminder->pet->pet_name" :detail="$reminder->description ?? ucfirst($reminder->category)" :time="$reminder->remind_date->format('M d, Y - h:i A')"
+                    <x-cards.reminder-card :title="$reminder->title" :detail="$reminder->description ?? ucfirst($reminder->category)" :time="$reminder->remind_date->format('M d, Y - h:i A')"
                         :icon="$icon" :iconBg="$color" :borderColor="'green'" :showActions="false" />
                 @empty
                     <div class="text-center py-8 bg-white rounded-2xl">
@@ -225,18 +225,6 @@
 
             <form action="{{ route('user.reminders.store') }}" method="POST" class="space-y-5">
                 @csrf
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Select Pet</label>
-                    <select name="pet_id" required
-                        class="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-[#68C4CF] focus:outline-none">
-                        <option value="">Choose pet</option>
-                        @if (isset($pets))
-                            @foreach ($pets as $pet)
-                                <option value="{{ $pet->id }}">{{ $pet->pet_name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Title</label>
@@ -685,7 +673,6 @@
                     return [
                         'id' => $r->id,
                         'title' => $r->title,
-                        'pet_name' => $r->pet->pet_name,
                         'description' => $r->description,
                         'category' => $r->category,
                         'repeat_type' => $r->repeat_type,
@@ -828,7 +815,6 @@
                                         </div>
                                         <div class="flex-1">
                                             <h4 class="font-bold text-gray-800">${task.title}</h4>
-                                            <p class="text-sm text-gray-600">${task.pet_name}</p>
                                             <p class="text-sm text-gray-500 mt-1">${task.description || task.category}</p>
                                             <p class="text-xs text-gray-400 mt-2">
                                                 <i class="far fa-clock mr-1"></i>${task.remind_time}

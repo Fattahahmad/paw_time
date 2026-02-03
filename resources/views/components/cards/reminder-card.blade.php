@@ -1,6 +1,5 @@
 @props([
     'title' => 'Reminder Title',
-    'pet' => null,
     'detail' => null,
     'date' => null,
     'time' => null,
@@ -21,17 +20,9 @@
             </div>
             <div class="flex-1">
                 <h3 class="font-bold text-gray-800 mb-1">{{ $title }}</h3>
-                @if ($pet || $detail)
+                @if ($detail)
                     <div class="flex items-center space-x-2 text-xs text-gray-500">
-                        @if ($pet)
-                            <span class="bg-gray-100 px-2 py-0.5 rounded text-gray-600">{{ $pet }}</span>
-                            @if ($detail)
-                                <span>•</span>
-                            @endif
-                        @endif
-                        @if ($detail)
-                            <span>{{ $detail }}</span>
-                        @endif
+                        <span>{{ $detail }}</span>
                     </div>
                 @endif
             </div>

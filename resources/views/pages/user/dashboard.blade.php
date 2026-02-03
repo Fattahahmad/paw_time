@@ -57,16 +57,13 @@
                  class="gradient-card rounded-3xl p-6 text-white relative overflow-hidden shadow-lg">
                 <div class="flex items-center justify-between relative z-10">
                     <div class="flex-1">
-                        <p class="text-sm opacity-90 mb-1">{{ $reminder->pet->pet_name }} just got</p>
+                        <p class="text-sm opacity-90 mb-1">Reminder:</p>
                         <p class="text-lg font-semibold mb-1">{{ $categoryText }}</p>
                         <p class="text-sm opacity-90">at {{ \Carbon\Carbon::parse($reminder->remind_date)->format('h:i A') }}</p>
                         <a href="{{ route('user.reminder') }}" class="inline-block btn-primary mt-4 px-6 py-2 rounded-full text-sm font-semibold text-white hover:bg-white/20 transition-colors">
                             See details
                         </a>
                     </div>
-                    <img src="{{ $reminder->pet->image }}" alt="{{ $reminder->pet->pet_name }}"
-                        class="w-32 h-32 rounded-2xl object-cover border-4 border-white/30 ml-4 flex-shrink-0"
-                        onerror="this.src='https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop'">
                 </div>
             </div>
             @endforeach
@@ -195,7 +192,7 @@
 
         @forelse($upcomingReminders as $reminder)
             <div class="mb-3">
-                <x-cards.reminder-card title="{{ $reminder->title }}" pet="{{ $reminder->pet->pet_name }}"
+                <x-cards.reminder-card title="{{ $reminder->title }}"
                     date="{{ $reminder->remind_date ? \Carbon\Carbon::parse($reminder->remind_date)->format('D, d M Y') : '-' }}"
                     time="{{ $reminder->remind_date ? \Carbon\Carbon::parse($reminder->remind_date)->format('H:i') : '-' }}"
                     icon="calendar" iconBg="blue" borderColor="blue">

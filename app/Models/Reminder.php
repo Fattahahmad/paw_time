@@ -16,7 +16,7 @@ class Reminder extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'pet_id',
+        'user_id',
         'title',
         'description',
         'remind_date',
@@ -34,19 +34,11 @@ class Reminder extends Model
     }
 
     /**
-     * Get the pet that owns the reminder.
+     * Get the user that owns the reminder.
      */
-    public function pet(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Pet::class);
-    }
-
-    /**
-     * Get the user through the pet relationship.
-     */
-    public function user()
-    {
-        return $this->hasOneThrough(User::class, Pet::class, 'id', 'id', 'pet_id', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     /**

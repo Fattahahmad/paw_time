@@ -14,14 +14,15 @@ class ReminderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Reminder::with(['pet.user']);
+        $query = Reminder::with('user');
 
         // Search
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhereHas('pet', function ($q) use ($search) {
-                      $q->where('pet_name', 'like', "%{$search}%");
+                  ->orWhereHas('user', function ($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
                   });
             });
         }
@@ -53,7 +54,7 @@ class ReminderController extends Controller
      */
     public function show(Reminder $reminder)
     {
-        $reminder->load('pet.user');
+        $reminder->load('user');
         return view('pages.admin.reminders.show', compact('reminder'));
     }
 
@@ -62,8 +63,8 @@ class ReminderController extends Controller
      */
     public function create()
     {
-        $pets = Pet::with('user')->orderBy('pet_name')->get();
-        return view('pages.admin.reminders.create', compact('pets'));
+        $users = \App\Models\User::where('role', 'user')->orderBy('name')->get();
+        return view('pages.admin.reminders.create', compact('users'));
     }
 
     /**
@@ -72,7 +73,7 @@ class ReminderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pet_id' => 'required|exists:pets,id',
+            'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:100',
             'description' => 'nullable|string',
             'remind_date' => 'required|date_format:Y-m-d\TH:i',
@@ -82,7 +83,7 @@ class ReminderController extends Controller
         ]);
 
         Reminder::create([
-            'pet_id' => $validated['pet_id'],
+            'user_id' => $validated['user_id'],
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'remind_date' => str_replace('T', ' ', $validated['remind_date']),
@@ -100,10 +101,10 @@ class ReminderController extends Controller
      */
     public function edit(Reminder $reminder)
     {
-        $reminder->load('pet.user');
-        $pets = Pet::with('user')->orderBy('pet_name')->get();
+        $reminder->load('user');
+        $users = \App\Models\User::where('role', 'user')->orderBy('name')->get();
 
-        return view('pages.admin.reminders.edit', compact('reminder', 'pets'));
+        return view('pages.admin.reminders.edit', compact('reminder', 'users'));
     }
 
     /**
@@ -112,7 +113,7 @@ class ReminderController extends Controller
     public function update(Request $request, Reminder $reminder)
     {
         $validated = $request->validate([
-            'pet_id' => 'required|exists:pets,id',
+            'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:100',
             'description' => 'nullable|string',
             'remind_date' => 'required|date_format:Y-m-d\TH:i',
@@ -122,7 +123,7 @@ class ReminderController extends Controller
         ]);
 
         $reminder->update([
-            'pet_id' => $validated['pet_id'],
+            'user_id' => $validated['user_id'],
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'remind_date' => str_replace('T', ' ', $validated['remind_date']),

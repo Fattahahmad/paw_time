@@ -12,18 +12,11 @@ class ReminderController extends Controller
      * Get all reminders for authenticated user.
      *
      * GET /api/reminders
-     * Query params: pet_id, category, repeat_type (schedule), status, date, date_from, date_to
+     * Query params: category, repeat_type (schedule), status, date, date_from, date_to
      */
     public function index(Request $request)
     {
-        $query = Reminder::whereHas('pet', function ($q) use ($request) {
-            $q->where('user_id', $request->user()->id);
-        })->with('pet:id,pet_name,species,image_url');
-
-        // Filter by pet
-        if ($request->has('pet_id')) {
-            $query->where('pet_id', $request->pet_id);
-        }
+        $query = Reminder::where('user_id', $request->user()->id);
 
         // Filter by category (feeding, grooming, vaccination, medication, checkup, other)
         if ($request->has('category')) {
@@ -122,7 +115,7 @@ class ReminderController extends Controller
     public function show(Request $request, Reminder $reminder)
     {
         // Verify ownership
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        if ($reminder->user_id !== $request->user()->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Reminder not found',
@@ -131,7 +124,7 @@ class ReminderController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $this->formatReminder($reminder->load('pet')),
+            'data' => $this->formatReminder($reminder),
         ]);
     }
 
@@ -143,7 +136,6 @@ class ReminderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pet_id' => 'required|exists:pets,id',
             'title' => 'required|string|max:100',
             'description' => 'nullable|string',
             'remind_date' => 'required|date',
@@ -152,16 +144,7 @@ class ReminderController extends Controller
             'repeat_type' => 'nullable|in:none,daily,weekly,monthly,yearly',
         ]);
 
-        // Verify user owns this pet
-        $pet = $request->user()->pets()->find($validated['pet_id']);
-        if (!$pet) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Pet not found',
-            ], 404);
-        }
-
-        $reminder = $pet->reminders()->create([
+        $reminder = $request->user()->reminders()->create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'remind_date' => $validated['remind_date'] . ' ' . $validated['remind_time'],
@@ -173,7 +156,7 @@ class ReminderController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Reminder created successfully',
-            'data' => $this->formatReminder($reminder->load('pet')),
+            'data' => $this->formatReminder($reminder),
         ], 201);
     }
 
@@ -185,7 +168,7 @@ class ReminderController extends Controller
     public function update(Request $request, Reminder $reminder)
     {
         // Verify ownership
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        if ($reminder->user_id !== $request->user()->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Reminder not found',
@@ -231,7 +214,7 @@ class ReminderController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Reminder updated successfully',
-            'data' => $this->formatReminder($reminder->fresh()->load('pet')),
+            'data' => $this->formatReminder($reminder->fresh()),
         ]);
     }
 
@@ -243,7 +226,7 @@ class ReminderController extends Controller
     public function markDone(Request $request, Reminder $reminder)
     {
         // Verify ownership
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        if ($reminder->user_id !== $request->user()->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Reminder not found',
@@ -255,7 +238,7 @@ class ReminderController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Reminder marked as done',
-            'data' => $this->formatReminder($reminder->fresh()->load('pet')),
+            'data' => $this->formatReminder($reminder->fresh()),
         ]);
     }
 
@@ -267,7 +250,7 @@ class ReminderController extends Controller
     public function markSkipped(Request $request, Reminder $reminder)
     {
         // Verify ownership
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        if ($reminder->user_id !== $request->user()->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Reminder not found',
@@ -279,7 +262,7 @@ class ReminderController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Reminder marked as skipped',
-            'data' => $this->formatReminder($reminder->fresh()->load('pet')),
+            'data' => $this->formatReminder($reminder->fresh()),
         ]);
     }
 
@@ -291,7 +274,7 @@ class ReminderController extends Controller
     public function destroy(Request $request, Reminder $reminder)
     {
         // Verify ownership
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        if ($reminder->user_id !== $request->user()->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Reminder not found',
@@ -313,11 +296,6 @@ class ReminderController extends Controller
      */
     public function filters(Request $request)
     {
-        $user = $request->user();
-
-        // Get user's pets for pet filter
-        $pets = $user->pets()->select('id', 'pet_name', 'species')->get();
-
         return response()->json([
             'success' => true,
             'data' => [
@@ -341,11 +319,6 @@ class ReminderController extends Controller
                     ['value' => 'done', 'label' => 'Completed'],
                     ['value' => 'skipped', 'label' => 'Skipped'],
                 ],
-                'pets' => $pets->map(fn($p) => [
-                    'value' => $p->id,
-                    'label' => $p->pet_name,
-                    'species' => $p->species,
-                ]),
             ],
         ]);
     }
@@ -354,23 +327,17 @@ class ReminderController extends Controller
      * Get calendar data (dates with reminders).
      *
      * GET /api/reminders/calendar
-     * Query params: month (Y-m), pet_id
+     * Query params: month (Y-m)
      */
     public function calendar(Request $request)
     {
         $month = $request->get('month', now()->format('Y-m'));
 
-        $query = Reminder::whereHas('pet', function ($q) use ($request) {
-            $q->where('user_id', $request->user()->id);
-        })
-        ->whereYear('remind_date', substr($month, 0, 4))
-        ->whereMonth('remind_date', substr($month, 5, 2));
+        $query = Reminder::where('user_id', $request->user()->id)
+            ->whereYear('remind_date', substr($month, 0, 4))
+            ->whereMonth('remind_date', substr($month, 5, 2));
 
-        if ($request->has('pet_id')) {
-            $query->where('pet_id', $request->pet_id);
-        }
-
-        $reminders = $query->with('pet:id,pet_name')->get();
+        $reminders = $query->get();
 
         // Group by date
         $grouped = $reminders->groupBy(function ($reminder) {
@@ -389,7 +356,6 @@ class ReminderController extends Controller
                         'category' => $r->category,
                         'status' => $r->status,
                         'time' => $r->remind_date->format('H:i'),
-                        'pet_name' => $r->pet->pet_name,
                     ];
                 }),
             ];
@@ -409,13 +375,6 @@ class ReminderController extends Controller
     {
         return [
             'id' => $reminder->id,
-            'pet_id' => $reminder->pet_id,
-            'pet' => $reminder->pet ? [
-                'id' => $reminder->pet->id,
-                'name' => $reminder->pet->pet_name,
-                'species' => $reminder->pet->species,
-                'image_url' => $reminder->pet->image_url ? url($reminder->pet->image_url) : null,
-            ] : null,
             'title' => $reminder->title,
             'description' => $reminder->description,
             'remind_date' => $reminder->remind_date->format('Y-m-d'),
@@ -427,7 +386,6 @@ class ReminderController extends Controller
             'status' => $reminder->status,
             'is_overdue' => $reminder->status === 'pending' && $reminder->remind_date->isPast(),
             'created_at' => $reminder->created_at,
-            'updated_at' => $reminder->updated_at,
         ];
     }
 }

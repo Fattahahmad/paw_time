@@ -35,7 +35,7 @@ class SendReminderNotifications extends Command
         $now = Carbon::now();
         $fiveMinutesAgo = $now->copy()->subMinutes(5);
 
-        $dueReminders = Reminder::with(['pet', 'pet.user'])
+        $dueReminders = Reminder::with('user')
             ->where('status', 'pending')
             ->whereBetween('remind_date', [$fiveMinutesAgo, $now])
             ->whereNull('notification_sent_at') // Only send once
@@ -52,7 +52,7 @@ class SendReminderNotifications extends Command
         $failed = 0;
 
         foreach ($dueReminders as $reminder) {
-            $user = $reminder->pet->user;
+            $user = $reminder->user;
 
             if (!$user) {
                 $this->warn("Reminder #{$reminder->id}: No user found, skipping.");
@@ -64,7 +64,6 @@ class SendReminderNotifications extends Command
             $body = $this->getNotificationBody($reminder);
             $data = [
                 'reminder_id' => (string) $reminder->id,
-                'pet_id' => (string) $reminder->pet_id,
                 'category' => $reminder->category,
                 'type' => 'reminder',
             ];
@@ -102,15 +101,13 @@ class SendReminderNotifications extends Command
      */
     private function getNotificationTitle(Reminder $reminder): string
     {
-        $petName = $reminder->pet->pet_name;
-
         $titles = [
-            'feeding' => "🍖 Waktu Makan {$petName}!",
-            'grooming' => "✂️ Jadwal Grooming {$petName}",
-            'vaccination' => "💉 Vaksinasi {$petName}",
-            'medication' => "💊 Obat untuk {$petName}",
-            'checkup' => "🏥 Check-up {$petName}",
-            'other' => "🔔 Pengingat untuk {$petName}",
+            'feeding' => '🍖 Waktu Makan Hewan Peliharaan!',
+            'grooming' => '✂️ Jadwal Grooming',
+            'vaccination' => '💉 Waktu Vaksinasi',
+            'medication' => '💊 Waktu Obat',
+            'checkup' => '🏥 Waktu Check-up',
+            'other' => '🔔 Pengingat',
         ];
 
         return $titles[$reminder->category] ?? $titles['other'];

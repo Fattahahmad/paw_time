@@ -15,19 +15,14 @@ class ReminderController extends Controller
     {
         $user = $request->user();
 
-        $pets = $user->pets()->get();
-
-        $reminders = Reminder::whereHas('pet', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-        ->with('pet')
-        ->orderBy('remind_date', 'asc')
-        ->get();
+        $reminders = Reminder::where('user_id', $user->id)
+            ->orderBy('remind_date', 'asc')
+            ->get();
 
         $pendingReminders = $reminders->where('status', 'pending');
         $doneReminders = $reminders->where('status', 'done');
 
-        return view('pages.user.reminder', compact('pets', 'reminders', 'pendingReminders', 'doneReminders'));
+        return view('pages.user.reminder', compact('reminders', 'pendingReminders', 'doneReminders'));
     }
 
     /**
@@ -36,7 +31,6 @@ class ReminderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pet_id' => 'required|exists:pets,id',
             'title' => 'required|string|max:100',
             'description' => 'nullable|string',
             'remind_date' => 'required|date',
@@ -45,10 +39,7 @@ class ReminderController extends Controller
             'repeat_type' => 'nullable|in:none,daily,weekly,monthly,yearly',
         ]);
 
-        // Verify user owns this pet
-        $pet = $request->user()->pets()->findOrFail($validated['pet_id']);
-
-        $reminder = $pet->reminders()->create([
+        $reminder = $request->user()->reminders()->create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'remind_date' => $validated['remind_date'] . ' ' . $validated['remind_time'],
@@ -62,7 +53,7 @@ class ReminderController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Reminder added successfully!',
-                'reminder' => $reminder->load('pet'),
+                'reminder' => $reminder,
             ]);
         }
 
@@ -75,8 +66,8 @@ class ReminderController extends Controller
      */
     public function update(Request $request, Reminder $reminder)
     {
-        // Verify user owns this reminder's pet
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        // Verify user owns this reminder
+        if ($reminder->user_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -105,8 +96,8 @@ class ReminderController extends Controller
      */
     public function markDone(Request $request, Reminder $reminder)
     {
-        // Verify user owns this reminder's pet
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        // Verify user owns this reminder
+        if ($reminder->user_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -120,8 +111,8 @@ class ReminderController extends Controller
      */
     public function destroy(Request $request, Reminder $reminder)
     {
-        // Verify user owns this reminder's pet
-        if ($reminder->pet->user_id !== $request->user()->id) {
+        // Verify user owns this reminder
+        if ($reminder->user_id !== $request->user()->id) {
             abort(403);
         }
 

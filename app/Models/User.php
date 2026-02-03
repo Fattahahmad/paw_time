@@ -80,11 +80,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all reminders for the user through pets.
+     * Get all reminders for the user.
      */
-    public function reminders()
+    public function reminders(): HasMany
     {
-        return $this->hasManyThrough(Reminder::class, Pet::class);
+        return $this->hasMany(Reminder::class);
     }
 
     /**

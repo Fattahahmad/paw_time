@@ -56,13 +56,12 @@ class SearchController extends Controller
 
         // Search Reminders
         if ($type === 'all' || $type === 'reminders') {
-            $reminders = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+            $reminders = Reminder::where('user_id', $user->id)
                 ->where(function ($q) use ($query) {
                     $q->where('title', 'like', "%{$query}%")
                       ->orWhere('description', 'like', "%{$query}%")
                       ->orWhere('category', 'like', "%{$query}%");
                 })
-                ->with('pet:id,pet_name')
                 ->limit($limit)
                 ->get();
 
@@ -74,7 +73,6 @@ class SearchController extends Controller
                     'remind_date' => $reminder->remind_date->format('Y-m-d'),
                     'remind_time' => $reminder->remind_date->format('H:i'),
                     'status' => $reminder->status,
-                    'pet_name' => $reminder->pet->pet_name,
                     'type' => 'reminder',
                 ];
             });
@@ -144,7 +142,7 @@ class SearchController extends Controller
             ->map(fn($name) => ['text' => $name, 'type' => 'pet']);
 
         // Reminder titles
-        $reminderTitles = Reminder::whereHas('pet', fn($q) => $q->where('user_id', $user->id))
+        $reminderTitles = Reminder::where('user_id', $user->id)
             ->where('title', 'like', "%{$query}%")
             ->limit(5)
             ->pluck('title')

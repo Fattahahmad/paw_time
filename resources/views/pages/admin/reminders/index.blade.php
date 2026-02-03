@@ -64,7 +64,7 @@
                     <tr>
                         <th><input type="checkbox" class="admin-checkbox rounded"></th>
                         <th>Reminder</th>
-                        <th>Pet</th>
+                        <th>User</th>
                         <th>Category</th>
                         <th>Due Date</th>
                         <th>Repeat</th>
@@ -90,8 +90,8 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <p class="text-sm text-gray-800">{{ $reminder->pet->pet_name ?? 'Unknown' }}</p>
-                                <p class="text-xs text-gray-500">{{ $reminder->pet->user->name ?? '' }}</p>
+                                <p class="text-sm text-gray-800">{{ $reminder->user->name ?? 'Unknown' }}</p>
+                                <p class="text-xs text-gray-500">{{ $reminder->user->email ?? '' }}</p>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 text-xs rounded-full {{ $reminder->category_color }}">
