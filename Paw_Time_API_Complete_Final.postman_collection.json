@@ -741,15 +741,10 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/reminders?pet_id={{pet_id}}&category=vaccination&status=pending&search=vaccine",
+              "raw": "{{base_url}}/api/reminders?category=vaccination&status=pending&search=vaccine",
               "host": ["{{base_url}}"],
               "path": ["api", "reminders"],
               "query": [
-                {
-                  "key": "pet_id",
-                  "value": "{{pet_id}}",
-                  "description": "Filter by pet ID"
-                },
                 {
                   "key": "category",
                   "value": "vaccination",
@@ -816,7 +811,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"pet_id\": {{pet_id}},\n  \"title\": \"Vaccination Reminder\",\n  \"description\": \"Annual vaccination for Bella\",\n  \"remind_date\": \"2025-02-15\",\n  \"remind_time\": \"09:00\",\n  \"category\": \"vaccination\",\n  \"repeat_type\": \"yearly\"\n}",
+              "raw": "{\n  \"title\": \"Vaccination Reminder\",\n  \"description\": \"Annual vaccination reminder\",\n  \"remind_date\": \"2025-02-15\",\n  \"remind_time\": \"09:00\",\n  \"category\": \"vaccination\",\n  \"repeat_type\": \"yearly\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -934,7 +929,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/reminders/calendar?month=2025-02&pet_id={{pet_id}}",
+              "raw": "{{base_url}}/api/reminders/calendar?month=2025-02",
               "host": ["{{base_url}}"],
               "path": ["api", "reminders", "calendar"],
               "query": [
@@ -942,11 +937,6 @@
                   "key": "month",
                   "value": "2025-02",
                   "description": "Month in Y-m format"
-                },
-                {
-                  "key": "pet_id",
-                  "value": "{{pet_id}}",
-                  "description": "Filter by pet ID"
                 }
               ]
             },

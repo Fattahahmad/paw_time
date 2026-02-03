@@ -205,7 +205,6 @@ class PetController extends Controller
         ];
 
         if ($includeRelations) {
-            $data['reminders_count'] = $pet->reminders()->count();
             $data['growth_records_count'] = $pet->growthRecords()->count();
             $data['health_checks_count'] = $pet->healthChecks()->count();
         }

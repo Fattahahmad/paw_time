@@ -48,14 +48,6 @@ class Pet extends Model
     }
 
     /**
-     * Get all reminders for the pet.
-     */
-    public function reminders(): HasMany
-    {
-        return $this->hasMany(Reminder::class);
-    }
-
-    /**
      * Get all health checks for the pet.
      */
     public function healthChecks(): HasMany
