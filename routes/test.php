@@ -7,11 +7,11 @@ use App\Models\Reminder;
 Route::get('/test-reminder', function() {
     // Get first user
     $user = User::where('role', 'user')->first();
-    
+
     if (!$user) {
         return response()->json(['error' => 'No user found'], 404);
     }
-    
+
     // Create test reminder
     $reminder = $user->reminders()->create([
         'title' => 'Test General Reminder',
@@ -21,7 +21,7 @@ Route::get('/test-reminder', function() {
         'repeat_type' => 'daily',
         'status' => 'pending',
     ]);
-    
+
     return response()->json([
         'success' => true,
         'message' => 'Reminder created successfully!',
