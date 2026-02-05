@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@pawtime.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
         ]);
 
         // Create Regular Users
@@ -29,12 +30,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => Hash::make('password'),
+            'role' => 'user',
         ]);
 
         $user2 = User::create([
             'name' => 'Jane Smith',
             'email' => 'jane@example.com',
             'password' => Hash::make('password'),
+            'role' => 'user',
         ]);
 
         // Create Pets for User 1
