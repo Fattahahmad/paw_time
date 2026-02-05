@@ -110,30 +110,41 @@
 
 @push('scripts')
 <script>
+    // Debug: Log when page loads
+    console.log('Notification test page loaded');
+    
     // Send to specific user
     document.getElementById('sendForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('Send form submitted');
 
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
+        console.log('Form data:', data);
+        
         const btn = document.getElementById('sendBtn');
         const resultDiv = document.getElementById('sendResult');
 
         btn.disabled = true;
         btn.innerHTML = '<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Sending...</span>';
 
+        const url = '{{ route('admin.notification-test.send') }}';
+        console.log('Sending to URL:', url);
+
         try {
-            const response = await fetch('{{ route('admin.notification-test.send') }}', {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify(data)
             });
 
+            console.log('Response status:', response.status);
             const result = await response.json();
+            console.log('Response data:', result);
 
             if (result.success) {
                 resultDiv.className = 'mt-4 p-4 bg-green-50 border border-green-200 rounded-xl';
@@ -164,6 +175,7 @@
     // Broadcast to all
     document.getElementById('broadcastForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('Broadcast form submitted');
 
         if (!confirm('Kirim broadcast ke semua users?')) {
             return;
@@ -171,24 +183,31 @@
 
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
+        console.log('Broadcast data:', data);
+        
         const btn = document.getElementById('broadcastBtn');
         const resultDiv = document.getElementById('broadcastResult');
 
         btn.disabled = true;
         btn.innerHTML = '<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Broadcasting...</span>';
 
+        const url = '{{ route('admin.notification-test.broadcast') }}';
+        console.log('Broadcasting to URL:', url);
+
         try {
-            const response = await fetch('{{ route('admin.notification-test.broadcast') }}', {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify(data)
             });
 
+            console.log('Broadcast response status:', response.status);
             const result = await response.json();
+            console.log('Broadcast response data:', result);
 
             if (result.success) {
                 resultDiv.className = 'mt-4 p-4 bg-green-50 border border-green-200 rounded-xl';

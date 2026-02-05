@@ -40,7 +40,8 @@ class NotificationTestController extends Controller
         $user = User::findOrFail($validated['user_id']);
 
         try {
-            $result = $this->firebaseService->sendToUser(
+            // Use sendAndLog to save notification log
+            $log = $this->firebaseService->sendAndLog(
                 $user,
                 $validated['title'],
                 $validated['message'],
@@ -50,16 +51,16 @@ class NotificationTestController extends Controller
                 ]
             );
 
-            if ($result['success']) {
+            if ($log->status === 'sent') {
                 return response()->json([
                     'success' => true,
                     'message' => "Notifikasi berhasil dikirim ke {$user->name}",
-                    'details' => $result,
+                    'details' => $log->data,
                 ]);
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal mengirim notifikasi: ' . ($result['error'] ?? 'Unknown error'),
+                    'message' => 'Gagal mengirim notifikasi: ' . ($log->error_message ?? 'Unknown error'),
                 ], 400);
             }
         } catch (\Exception $e) {
@@ -89,23 +90,29 @@ class NotificationTestController extends Controller
 
         foreach ($users as $user) {
             try {
-                $result = $this->firebaseService->sendToUser(
+                // Use sendAndLog to save each notification
+                $log = $this->firebaseService->sendAndLog(
                     $user,
                     $validated['title'],
                     $validated['message'],
                     ['type' => 'broadcast', 'broadcast' => true]
                 );
 
-                if ($result['success']) {
+                if ($log->status === 'sent') {
                     $results['success']++;
+                    $results['details'][] = [
+                        'user' => $user->name,
+                        'status' => 'sent',
+                        'log_id' => $log->id,
+                    ];
                 } else {
                     $results['failed']++;
+                    $results['details'][] = [
+                        'user' => $user->name,
+                        'status' => 'failed',
+                        'error' => $log->error_message,
+                    ];
                 }
-
-                $results['details'][] = [
-                    'user' => $user->name,
-                    'status' => $result['success'] ? 'sent' : 'failed',
-                ];
             } catch (\Exception $e) {
                 $results['failed']++;
                 $results['details'][] = [

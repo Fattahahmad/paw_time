@@ -119,10 +119,11 @@ class FirebaseService
                 ...$result,
             ];
 
-            // If token is invalid, deactivate it
-            if (!$result['success'] && isset($result['status']) && $result['status'] === 404) {
+            // If token is invalid (400 or 404), deactivate it
+            if (!$result['success'] && isset($result['status']) && in_array($result['status'], [400, 404])) {
                 $token->deactivate();
-            } else {
+                Log::info("FCM Token {$token->id} deactivated - status {$result['status']}");
+            } elseif ($result['success']) {
                 $token->markAsUsed();
             }
         }
