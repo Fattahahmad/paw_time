@@ -84,10 +84,9 @@ class PetController extends Controller
         ]);
 
         // Handle image upload
-        $imageUrl = null;
+        $imagePath = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('pets', 'public');
-            $imageUrl = Storage::url($path);
+            $imagePath = $request->file('image')->store('pets', 'public');
         }
 
         $pet = $request->user()->pets()->create([
@@ -98,7 +97,7 @@ class PetController extends Controller
             'birth_date' => $validated['birth_date'] ?? null,
             'color' => $validated['color'] ?? null,
             'description' => $validated['description'] ?? null,
-            'image_url' => $imageUrl,
+            'image_url' => $imagePath,
         ]);
 
         return response()->json([
@@ -172,8 +171,7 @@ class PetController extends Controller
 
         // Delete image if exists
         if ($pet->image_url) {
-            $path = str_replace('/storage/', '', $pet->image_url);
-            Storage::disk('public')->delete($path);
+            Storage::disk('public')->delete($pet->image_url);
         }
 
         $pet->delete();
@@ -198,7 +196,7 @@ class PetController extends Controller
             'birth_date' => $pet->birth_date?->format('Y-m-d'),
             'color' => $pet->color,
             'description' => $pet->description,
-            'image_url' => $pet->image_url ? url($pet->image_url) : null,
+            'image_url' => $pet->image_url ? asset('storage/' . $pet->image_url) : null,
             'age' => $pet->birth_date ? $this->calculateAge($pet->birth_date) : null,
             'created_at' => $pet->created_at,
             'updated_at' => $pet->updated_at,

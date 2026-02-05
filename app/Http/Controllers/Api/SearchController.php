@@ -48,7 +48,7 @@ class SearchController extends Controller
                     'pet_name' => $pet->pet_name,
                     'species' => $pet->species,
                     'breed' => $pet->breed,
-                    'image_url' => $pet->image_url ? url($pet->image_url) : null,
+                    'image_url' => $pet->image_url ? asset('storage/' . $pet->image_url) : null,
                     'type' => 'pet',
                 ];
             });

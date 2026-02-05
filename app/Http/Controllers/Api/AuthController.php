@@ -214,19 +214,18 @@ class AuthController extends Controller
 
         // Delete old avatar if exists
         if ($user->profile_image) {
-            $oldPath = str_replace('/storage/', '', $user->profile_image);
-            Storage::disk('public')->delete($oldPath);
+            Storage::disk('public')->delete($user->profile_image);
         }
 
         // Store new avatar
-        $path = $request->file('avatar')->store('avatars', 'public');
-        $user->update(['profile_image' => Storage::url($path)]);
+        $path = $request->file('avatar')->store('profiles', 'public');
+        $user->update(['profile_image' => $path]);
 
         return response()->json([
             'success' => true,
             'message' => 'Avatar uploaded successfully',
             'data' => [
-                'avatar_url' => url($user->profile_image),
+                'avatar_url' => asset('storage/' . $path),
             ]
         ]);
     }
@@ -248,8 +247,7 @@ class AuthController extends Controller
         }
 
         // Delete avatar from storage
-        $path = str_replace('/storage/', '', $user->profile_image);
-        Storage::disk('public')->delete($path);
+        Storage::disk('public')->delete($user->profile_image);
 
         $user->update(['profile_image' => null]);
 
