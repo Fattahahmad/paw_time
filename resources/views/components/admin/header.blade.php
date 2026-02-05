@@ -4,7 +4,7 @@
         {{-- Left: Toggle Button + Page Title --}}
         <div class="flex items-center space-x-4">
             {{-- Paw Toggle Button --}}
-            <button onclick="toggleAdminSidebar()" 
+            <button onclick="toggleAdminSidebar()"
                     class="paw-toggle-btn w-10 h-10 bg-gradient-to-br from-[#68C4CF] to-[#5AB0BB] rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                 <span class="text-xl transform transition-transform duration-300" id="pawToggleIcon">🐾</span>
             </button>
@@ -44,15 +44,15 @@
                         <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'Admin' }}</p>
                         <p class="text-xs text-gray-500">{{ ucfirst(auth()->user()->role ?? 'admin') }}</p>
                     </div>
-                    <svg class="w-4 h-4 text-gray-400 hidden md:block transition-transform" 
-                         :class="{'rotate-180': open}" 
+                    <svg class="w-4 h-4 text-gray-400 hidden md:block transition-transform"
+                         :class="{'rotate-180': open}"
                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
 
                 {{-- Dropdown Menu --}}
-                <div x-show="open" 
+                <div x-show="open"
                      @click.away="open = false"
                      x-transition:enter="transition ease-out duration-200"
                      x-transition:enter-start="opacity-0 transform scale-95"
@@ -62,7 +62,7 @@
                      x-transition:leave-end="opacity-0 transform scale-95"
                      class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
                      style="display: none;">
-                    
+
                     {{-- User Info --}}
                     <div class="px-4 py-3 border-b border-gray-100">
                         <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'Admin' }}</p>

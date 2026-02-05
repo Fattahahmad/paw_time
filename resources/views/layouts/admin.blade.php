@@ -44,12 +44,12 @@
             const mainContent = document.getElementById('adminMain');
             const overlay = document.getElementById('sidebarOverlay');
             const icon = document.getElementById('pawToggleIcon');
-            
+
             // For desktop
             if (window.innerWidth >= 1024) {
                 sidebar.classList.toggle('collapsed');
                 mainContent.classList.toggle('expanded');
-                
+
                 // Animate icon
                 if (sidebar.classList.contains('collapsed')) {
                     icon.style.transform = 'rotate(180deg)';
@@ -60,7 +60,7 @@
                 // For mobile
                 sidebar.classList.toggle('show');
                 overlay.classList.toggle('show');
-                
+
                 // Animate icon
                 if (sidebar.classList.contains('show')) {
                     icon.style.transform = 'rotate(180deg)';
@@ -74,10 +74,10 @@
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('adminSidebar');
             const toggleBtn = document.querySelector('.paw-toggle-btn');
-            
-            if (window.innerWidth < 1024 && 
-                sidebar.classList.contains('show') && 
-                !sidebar.contains(event.target) && 
+
+            if (window.innerWidth < 1024 &&
+                sidebar.classList.contains('show') &&
+                !sidebar.contains(event.target) &&
                 !toggleBtn.contains(event.target)) {
                 toggleAdminSidebar();
             }
@@ -88,7 +88,7 @@
             const sidebar = document.getElementById('adminSidebar');
             const mainContent = document.getElementById('adminMain');
             const overlay = document.getElementById('sidebarOverlay');
-            
+
             if (window.innerWidth >= 1024) {
                 // Remove mobile classes
                 sidebar.classList.remove('show');
