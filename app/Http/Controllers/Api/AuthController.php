@@ -18,13 +18,13 @@ class AuthController extends Controller
     private function getDeviceType(Request $request): string
     {
         $userAgent = strtolower($request->header('User-Agent', ''));
-        
+
         if (str_contains($userAgent, 'android')) {
             return 'android';
         } elseif (str_contains($userAgent, 'iphone') || str_contains($userAgent, 'ipad')) {
             return 'ios';
         }
-        
+
         return 'web';
     }
 

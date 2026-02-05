@@ -48,7 +48,7 @@
                 <form method="POST" action="{{ route('auth.login') }}" class="space-y-5">
                     @csrf
                     <input type="hidden" name="fcm_token" id="loginFcmToken">
-                    
+
                     <x-ui.form-input label="Email" type="email" name="email" placeholder="yourname@email.com" icon="email"
                         id="loginEmail" :required="true" value="{{ old('email') }}" />
 
@@ -104,7 +104,7 @@
                 <form method="POST" action="/register" class="space-y-5">
                     @csrf
                     <input type="hidden" name="fcm_token" id="registerFcmToken">
-                    
+
                     <x-ui.form-input label="Full Name" type="text" name="name" placeholder="John Doe" icon="user" id="fullName"
                         :required="true" value="{{ old('name') }}" />
 
