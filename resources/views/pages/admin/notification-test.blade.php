@@ -112,7 +112,7 @@
 <script>
     // Debug: Log when page loads
     console.log('Notification test page loaded');
-    
+
     // Send to specific user
     document.getElementById('sendForm').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -121,7 +121,7 @@
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
         console.log('Form data:', data);
-        
+
         const btn = document.getElementById('sendBtn');
         const resultDiv = document.getElementById('sendResult');
 
@@ -184,7 +184,7 @@
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
         console.log('Broadcast data:', data);
-        
+
         const btn = document.getElementById('broadcastBtn');
         const resultDiv = document.getElementById('broadcastResult');
 

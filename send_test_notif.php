@@ -21,7 +21,7 @@ echo "Active tokens: " . $user->fcmTokens()->active()->count() . "\n\n";
 
 try {
     $service = app(FirebaseService::class);
-    
+
     echo "Calling sendAndLog()...\n";
     $log = $service->sendAndLog(
         $user,
@@ -38,11 +38,11 @@ try {
     echo "Log ID: {$log->id}\n";
     echo "Status: {$log->status}\n";
     echo "Sent at: {$log->sent_at}\n";
-    
+
     if ($log->error_message) {
         echo "Error: {$log->error_message}\n";
     }
-    
+
     echo "\n--- Results Detail ---\n";
     if (isset($log->data['results'])) {
         foreach ($log->data['results'] as $idx => $result) {
@@ -50,7 +50,7 @@ try {
             echo "  Token ID: {$result['token_id']}\n";
             echo "  Device: {$result['device_type']}\n";
             echo "  Success: " . ($result['success'] ? 'YES ✅' : 'NO ❌') . "\n";
-            
+
             if ($result['success']) {
                 echo "  Message ID: {$result['message_id']}\n";
             } else {
@@ -64,7 +64,7 @@ try {
         echo "No results data\n";
         print_r($log->data);
     }
-    
+
 } catch (\Exception $e) {
     echo "\n❌ EXCEPTION\n";
     echo "Message: {$e->getMessage()}\n";

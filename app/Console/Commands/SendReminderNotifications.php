@@ -71,10 +71,9 @@ class SendReminderNotifications extends Command
             try {
                 $result = $firebase->sendAndLog($user, $title, $body, $data, $reminder->id);
 
-                // Mark reminder as notified
-                $reminder->update(['notification_sent_at' => now()]);
-
                 if ($result->status === 'sent') {
+                    // Mark reminder as notified only if successful
+                    $reminder->update(['notification_sent_at' => now()]);
                     $sent++;
                     $this->info("✓ Sent notification for reminder #{$reminder->id} to {$user->name}");
                 } else {

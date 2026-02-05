@@ -23,12 +23,14 @@ class Reminder extends Model
         'category',
         'repeat_type',
         'status',
+        'notification_sent_at',
     ];
 
     protected function casts(): array
     {
         return [
             'remind_date' => 'datetime',
+            'notification_sent_at' => 'datetime',
             'created_at' => 'datetime',
         ];
     }
