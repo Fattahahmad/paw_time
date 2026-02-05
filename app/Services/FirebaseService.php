@@ -41,12 +41,12 @@ class FirebaseService
             $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
 
             $token = $client->fetchAccessTokenWithAssertion();
-            
+
             if (!isset($token['access_token'])) {
                 Log::error('Failed to get Firebase access token', ['token_response' => $token]);
                 throw new \Exception('Failed to get access token from Firebase');
             }
-            
+
             $this->accessToken = $token['access_token'];
             return $this->accessToken;
         } catch (\Exception $e) {
@@ -85,7 +85,7 @@ class FirebaseService
 
         try {
             $accessToken = $this->getAccessToken();
-            
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
@@ -103,7 +103,7 @@ class FirebaseService
             $errorMessage = $errorData['message'] ?? 'Unknown error';
             $errorCode = $errorData['code'] ?? null;
             $errorStatus = $errorData['status'] ?? null;
-            
+
             Log::warning('FCM send failed', [
                 'status' => $response->status(),
                 'error_message' => $errorMessage,
