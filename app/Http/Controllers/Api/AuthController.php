@@ -41,6 +41,7 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'avatar_url' => $user->profile_image ? asset('storage/' . $user->profile_image) : null,
                 ],
                 'token' => $token,
                 'token_type' => 'Bearer',
@@ -83,6 +84,7 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role ?? 'user',
+                    'avatar_url' => $user->profile_image ? asset('storage/' . $user->profile_image) : null,
                 ],
                 'token' => $token,
                 'token_type' => 'Bearer',
@@ -136,6 +138,7 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role ?? 'user',
+                'avatar_url' => $user->profile_image ? asset('storage/' . $user->profile_image) : null,
                 'created_at' => $user->created_at,
             ]
         ]);
