@@ -1,9 +1,9 @@
 <?php
 /**
  * Create or Update Admin User
- * 
+ *
  * Usage: php create_admin.php
- * 
+ *
  * This script will:
  * - Check if admin@pawtime.com exists
  * - If exists: Update role to 'admin' and reset password to 'admin123'
@@ -33,7 +33,7 @@ if ($admin) {
         'role' => 'admin',
         'password' => Hash::make($password),
     ]);
-    
+
     echo "✅ Admin user updated successfully!\n\n";
     echo "   User ID:  {$admin->id}\n";
     echo "   Name:     {$admin->name}\n";
@@ -48,7 +48,7 @@ if ($admin) {
         'password' => Hash::make($password),
         'role' => 'admin',
     ]);
-    
+
     echo "✅ New admin user created successfully!\n\n";
     echo "   User ID:  {$admin->id}\n";
     echo "   Name:     {$admin->name}\n";

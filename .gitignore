@@ -25,3 +25,8 @@ Thumbs.db
 Paw_Time_API.postman_collection.json
 Paw_Time_API_Complete_Final.postman_collection.json
 Paw_Time_API_Complete_Final.postman_collection.json
+
+# Admin setup scripts (security)
+create_admin.php
+check_*.php
+test_*.php
