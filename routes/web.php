@@ -48,6 +48,7 @@ Route::middleware(['auth'])->name('user.')->group(function () {
 
     // Appointments (User-side)
     Route::get('/appointments', [App\Http\Controllers\User\AppointmentController::class, 'index'])->name('appointments.index');
+    Route::post('/appointments', [App\Http\Controllers\User\AppointmentController::class, 'store'])->name('appointments.store');
     Route::get('/appointments/{appointment}', [App\Http\Controllers\User\AppointmentController::class, 'show'])->name('appointments.show');
 
     // Medical Records (User download)
@@ -88,6 +89,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/appointments/{appointment}/edit', [App\Http\Controllers\Admin\AppointmentController::class, 'edit'])->name('appointments.edit');
     Route::put('/appointments/{appointment}', [App\Http\Controllers\Admin\AppointmentController::class, 'update'])->name('appointments.update');
     Route::post('/appointments/{appointment}/cancel', [App\Http\Controllers\Admin\AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    Route::post('/appointments/{appointment}/complete', [App\Http\Controllers\Admin\AppointmentController::class, 'complete'])->name('appointments.complete');
 
     // Medical Records
     Route::post('/medical-records', [App\Http\Controllers\Admin\MedicalRecordController::class, 'store'])->name('medical-records.store');

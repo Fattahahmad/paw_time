@@ -7,6 +7,7 @@ use App\Models\Pet;
 use App\Models\PetGrowth;
 use App\Models\Reminder;
 use App\Models\User;
+use App\Models\Appointment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -211,6 +212,49 @@ class DatabaseSeeder extends Seeder
             'prescription' => 'Meloxicam 1.5mg - once daily with food for 5 days',
             'notes' => 'X-ray showed no bone damage. Restrict activity for 2 weeks.',
             'next_visit_date' => now()->subDays(75),
+        ]);
+
+        // Create Appointments
+        Appointment::create([
+            'user_id' => $user1->id,
+            'pet_id' => $bella->id,
+            'appointment_date' => now()->addDays(3)->setTime(10, 0),
+            'status' => 'pending',
+            'notes' => 'Regular checkup and vaccination',
+        ]);
+
+        Appointment::create([
+            'user_id' => $user1->id,
+            'pet_id' => $max->id,
+            'appointment_date' => now()->addDays(5)->setTime(14, 30),
+            'status' => 'confirmed',
+            'notes' => 'Follow-up visit for vaccination',
+        ]);
+
+        Appointment::create([
+            'user_id' => $user2->id,
+            'pet_id' => $mochi->id,
+            'appointment_date' => now()->addDays(7)->setTime(11, 0),
+            'status' => 'pending',
+            'notes' => 'Skin allergy follow-up',
+        ]);
+
+        Appointment::create([
+            'user_id' => $user2->id,
+            'pet_id' => $charlie->id,
+            'appointment_date' => now()->subDays(5)->setTime(9, 30),
+            'status' => 'completed',
+            'notes' => 'Annual health check',
+            'veterinarian_notes' => 'All vitals normal. Recommended diet adjustment.',
+        ]);
+
+        Appointment::create([
+            'user_id' => $user1->id,
+            'pet_id' => $bella->id,
+            'appointment_date' => now()->subDays(2)->setTime(15, 0),
+            'status' => 'cancelled',
+            'notes' => 'Grooming session',
+            'cancellation_reason' => 'Owner not available',
         ]);
 
         $this->command->info('Database seeded successfully!');

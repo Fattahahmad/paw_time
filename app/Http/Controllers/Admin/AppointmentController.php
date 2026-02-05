@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Pet;
 use App\Models\MedicalRecord;
+use App\Models\HealthCheck;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -174,6 +175,63 @@ class AppointmentController extends Controller
     }
 
     /**
+     * Complete appointment and create health check record.
+     */
+    public function complete(Request $request, Appointment $appointment)
+    {
+        // Validate that appointment can be completed
+        if ($appointment->status === 'completed') {
+            return back()->with('error', 'This appointment has already been completed.');
+        }
+
+        if ($appointment->status === 'cancelled') {
+            return back()->with('error', 'Cannot complete a cancelled appointment.');
+        }
+
+        $validated = $request->validate([
+            'complaint' => 'required|string',
+            'diagnosis' => 'required|string',
+            'treatment' => 'required|string',
+            'prescription' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'next_visit_date' => 'nullable|date|after:today',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Create health check record
+            $healthCheck = HealthCheck::create([
+                'pet_id' => $appointment->pet_id,
+                'appointment_id' => $appointment->id,
+                'check_date' => $appointment->appointment_date,
+                'complaint' => $validated['complaint'],
+                'diagnosis' => $validated['diagnosis'],
+                'treatment' => $validated['treatment'],
+                'prescription' => $validated['prescription'] ?? null,
+                'notes' => $validated['notes'] ?? null,
+                'next_visit_date' => $validated['next_visit_date'] ?? null,
+            ]);
+
+            // Update appointment status to completed
+            $appointment->update([
+                'status' => 'completed',
+                'veterinarian_notes' => $validated['notes'] ?? null,
+            ]);
+
+            // Send notification
+            $this->sendAppointmentNotification($appointment, 'status_changed');
+
+            DB::commit();
+
+            return redirect()->route('admin.appointments.show', $appointment)
+                ->with('success', 'Appointment completed and health check record created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to complete appointment: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
      * Send appointment notifications.
      */
     protected function sendAppointmentNotification(Appointment $appointment, string $type)
@@ -211,7 +269,7 @@ class AppointmentController extends Controller
         if ($notification && $user) {
             try {
                 $this->firebaseService->sendToUser(
-                    $user->id,
+                    $user,
                     $notification['title'],
                     $notification['body'],
                     [

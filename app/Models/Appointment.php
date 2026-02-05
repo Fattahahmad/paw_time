@@ -41,6 +41,11 @@ class Appointment extends Model
         return $this->hasOne(MedicalRecord::class);
     }
 
+    public function healthCheck()
+    {
+        return $this->hasOne(HealthCheck::class);
+    }
+
     public function notificationLogs()
     {
         return $this->hasMany(NotificationLog::class, 'related_id')->where('type', 'appointment');

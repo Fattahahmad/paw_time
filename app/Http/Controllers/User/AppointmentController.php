@@ -22,6 +22,42 @@ class AppointmentController extends Controller
     }
 
     /**
+     * Store new appointment booking.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'pet_id' => 'required|exists:pets,id',
+            'appointment_date' => 'nullable|date|after:now',
+            'notes' => 'required|string|max:1000',
+        ]);
+
+        // Verify pet belongs to user
+        $pet = auth()->user()->pets()->findOrFail($validated['pet_id']);
+
+        // Create appointment with default date if not provided
+        $appointment = Appointment::create([
+            'user_id' => auth()->id(),
+            'pet_id' => $validated['pet_id'],
+            'appointment_date' => $validated['appointment_date'] ?? now()->addDays(1)->setTime(9, 0),
+            'status' => 'pending',
+            'notes' => $validated['notes'],
+        ]);
+
+        // Generate WhatsApp URL
+        $whatsappNumber = '6281234567890'; // Admin WhatsApp
+        $message = urlencode("Halo, saya {$request->user()->name} ingin booking appointment untuk {$pet->pet_name}.\n\nKeluhan: {$validated['notes']}\n\nMohon konfirmasi jadwal. Terima kasih!");
+        $whatsappUrl = "https://wa.me/{$whatsappNumber}?text={$message}";
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Appointment berhasil dibuat',
+            'whatsapp_url' => $whatsappUrl,
+            'appointment' => $appointment->load('pet'),
+        ]);
+    }
+
+    /**
      * Show appointment details.
      */
     public function show(Appointment $appointment)

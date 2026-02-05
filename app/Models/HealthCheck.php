@@ -22,6 +22,7 @@ class HealthCheck extends Model
 
     protected $fillable = [
         'pet_id',
+        'appointment_id',
         'check_date',
         'complaint',
         'status',
@@ -41,6 +42,14 @@ class HealthCheck extends Model
             'next_visit_date' => 'date',
             'created_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the appointment that this health check is from.
+     */
+    public function appointment(): BelongsTo
+    {
+        return $this->belongsTo(Appointment::class);
     }
 
     /**

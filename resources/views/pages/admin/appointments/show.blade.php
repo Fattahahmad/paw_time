@@ -96,140 +96,150 @@
 
         {{-- Medical Record Section --}}
         <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-6">Medical Record</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-6">Health Check History</h2>
 
-            @if($appointment->medicalRecord)
-                {{-- View Existing Medical Record --}}
+            @if($appointment->healthCheck)
+                {{-- View Existing Health Check --}}
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+                    <p class="text-green-800 font-semibold">✅ This appointment has been completed and health check recorded.</p>
+                </div>
+
                 <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Complaint</h3>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-gray-700">{{ $appointment->healthCheck->complaint }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Check Date</h3>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-gray-700">{{ $appointment->healthCheck->check_date->format('d M Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <h3 class="font-semibold text-gray-800 mb-2">Diagnosis</h3>
                         <div class="bg-gray-50 rounded-xl p-4">
-                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->medicalRecord->diagnosis }}</p>
+                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->healthCheck->diagnosis }}</p>
                         </div>
                     </div>
 
                     <div>
                         <h3 class="font-semibold text-gray-800 mb-2">Treatment</h3>
                         <div class="bg-gray-50 rounded-xl p-4">
-                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->medicalRecord->treatment }}</p>
+                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->healthCheck->treatment }}</p>
                         </div>
                     </div>
 
-                    @if($appointment->medicalRecord->prescription)
+                    @if($appointment->healthCheck->prescription)
                     <div>
                         <h3 class="font-semibold text-gray-800 mb-2">Prescription</h3>
                         <div class="bg-gray-50 rounded-xl p-4">
-                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->medicalRecord->prescription }}</p>
+                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->healthCheck->prescription }}</p>
                         </div>
                     </div>
                     @endif
 
-                    @if($appointment->medicalRecord->has_attachments)
+                    @if($appointment->healthCheck->notes)
                     <div>
-                        <h3 class="font-semibold text-gray-800 mb-2">Attachments</h3>
+                        <h3 class="font-semibold text-gray-800 mb-2">Notes</h3>
                         <div class="bg-gray-50 rounded-xl p-4">
-                            <p class="text-sm text-gray-600">{{ $appointment->medicalRecord->attachment_count }} file(s) attached</p>
-                            <div class="mt-2 space-y-2">
-                                @foreach($appointment->medicalRecord->attachments as $attachment)
-                                    <a href="{{ asset('storage/' . $attachment) }}" target="_blank"
-                                       class="text-sm text-cyan-600 hover:text-cyan-800 block">
-                                        📎 {{ basename($attachment) }}
-                                    </a>
-                                @endforeach
-                            </div>
+                            <p class="text-gray-700 whitespace-pre-line">{{ $appointment->healthCheck->notes }}</p>
                         </div>
                     </div>
                     @endif
 
-                    <div class="flex gap-3">
-                        <a href="{{ route('admin.medical-records.download', $appointment->medicalRecord) }}"
-                           class="btn-primary">
-                            📄 Download PDF
-                        </a>
-                        <button onclick="document.getElementById('medical-record-form').style.display='block'"
-                                class="btn-secondary">
-                            ✏️ Edit Medical Record
+                    @if($appointment->healthCheck->next_visit_date)
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Next Visit Date</h3>
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <p class="text-blue-800 font-semibold">📅 {{ $appointment->healthCheck->next_visit_date->format('d M Y') }}</p>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            @elseif($appointment->status === 'completed' || in_array($appointment->status, ['pending', 'confirmed']))
+                {{-- Complete Appointment Form --}}
+                @if($appointment->status !== 'completed')
+                <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-4 mb-6">
+                    <h3 class="font-bold text-cyan-900 mb-2">📋 Complete This Appointment</h3>
+                    <p class="text-cyan-800 text-sm">Fill in the health check details below to complete this appointment and create a medical history record.</p>
+                </div>
+                @endif
+
+                <form action="{{ route('admin.appointments.complete', $appointment) }}" method="POST" x-data="{ showForm: {{ $appointment->status === 'completed' ? 'true' : 'false' }} }">
+                    @csrf
+
+                    @if($appointment->status !== 'completed')
+                    <div class="mb-6">
+                        <button type="button" @click="showForm = !showForm" class="btn-primary w-full md:w-auto">
+                            <span x-text="showForm ? '▼ Hide Form' : '▶ Complete Appointment & Create Health Check'"></span>
                         </button>
                     </div>
+                    @endif
 
-                    {{-- Edit Form (Hidden by Default) --}}
-                    <form id="medical-record-form" action="{{ route('admin.medical-records.store') }}" method="POST" enctype="multipart/form-data" style="display: none;" class="mt-6 pt-6 border-t">
-                        @csrf
-                        <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis *</label>
-                                <textarea name="diagnosis" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">{{ $appointment->medicalRecord->diagnosis }}</textarea>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Treatment *</label>
-                                <textarea name="treatment" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">{{ $appointment->medicalRecord->treatment }}</textarea>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Prescription</label>
-                                <textarea name="prescription" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">{{ $appointment->medicalRecord->prescription }}</textarea>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Attachments (Max 5 files, 10MB each)</label>
-                                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">
-                            </div>
-                            <div class="flex gap-3">
-                                <button type="submit" class="btn-primary">Update Medical Record</button>
-                                <button type="button" onclick="document.getElementById('medical-record-form').style.display='none'"
-                                        class="btn-secondary">Cancel</button>
-                            </div>
+                    <div x-show="showForm" x-transition class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Complaint <span class="text-red-500">*</span></label>
+                            <textarea name="complaint" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="What was the pet's complaint or reason for visit?">{{ old('complaint', $appointment->notes) }}</textarea>
+                            @error('complaint')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                    </form>
-                </div>
-            @else
-                {{-- Create New Medical Record --}}
-                @if($appointment->status === 'completed')
-                    <form action="{{ route('admin.medical-records.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
 
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis <span class="text-red-500">*</span></label>
-                                <textarea name="diagnosis" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Enter diagnosis details...">{{ old('diagnosis') }}</textarea>
-                                @error('diagnosis')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis <span class="text-red-500">*</span></label>
+                            <textarea name="diagnosis" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Enter diagnosis details...">{{ old('diagnosis') }}</textarea>
+                            @error('diagnosis')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Treatment <span class="text-red-500">*</span></label>
-                                <textarea name="treatment" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Enter treatment details...">{{ old('treatment') }}</textarea>
-                                @error('treatment')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Treatment <span class="text-red-500">*</span></label>
+                            <textarea name="treatment" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Enter treatment details...">{{ old('treatment') }}</textarea>
+                            @error('treatment')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Prescription</label>
-                                <textarea name="prescription" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Enter prescription...">{{ old('prescription') }}</textarea>
-                            </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prescription</label>
+                            <textarea name="prescription" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Enter prescription (medicine, dosage, duration)...">{{ old('prescription') }}</textarea>
+                        </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Attachments (Max 5 files, 10MB each)</label>
-                                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">
-                                <p class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG, PDF</p>
-                            </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                            <textarea name="notes" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500" placeholder="Any additional notes...">{{ old('notes', $appointment->veterinarian_notes) }}</textarea>
+                        </div>
 
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Next Visit Date (Optional)</label>
+                            <input type="date" name="next_visit_date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" value="{{ old('next_visit_date') }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500">
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
                             <button type="submit" class="btn-primary">
-                                Save Medical Record
+                                ✅ Complete Appointment & Save Health Check
                             </button>
+                            @if($appointment->status !== 'completed')
+                            <button type="button" @click="showForm = false" class="btn-secondary">
+                                Cancel
+                            </button>
+                            @endif
                         </div>
-                    </form>
-                @else
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
-                        <p class="text-yellow-800">Medical record can be created once the appointment is completed.</p>
                     </div>
-                @endif
+                </form>
+            @elseif($appointment->status === 'cancelled')
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                    <p class="text-red-800">This appointment was cancelled and cannot be completed.</p>
+                </div>
             @endif
+        </div>
         </div>
 
         <div class="mt-6">
