@@ -31,17 +31,31 @@ class FirebaseService
         $credentialsPath = storage_path('app/firebase-credentials.json');
 
         if (!file_exists($credentialsPath)) {
+            Log::error('Firebase credentials file not found', ['path' => $credentialsPath]);
             throw new \Exception('Firebase credentials file not found at: ' . $credentialsPath);
         }
 
-        $client = new GoogleClient();
-        $client->setAuthConfig($credentialsPath);
-        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+        try {
+            $client = new GoogleClient();
+            $client->setAuthConfig($credentialsPath);
+            $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
 
-        $token = $client->fetchAccessTokenWithAssertion();
-        $this->accessToken = $token['access_token'];
-
-        return $this->accessToken;
+            $token = $client->fetchAccessTokenWithAssertion();
+            
+            if (!isset($token['access_token'])) {
+                Log::error('Failed to get Firebase access token', ['token_response' => $token]);
+                throw new \Exception('Failed to get access token from Firebase');
+            }
+            
+            $this->accessToken = $token['access_token'];
+            return $this->accessToken;
+        } catch (\Exception $e) {
+            Log::error('Firebase getAccessToken error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
     }
 
     /**
@@ -70,8 +84,10 @@ class FirebaseService
         ];
 
         try {
+            $accessToken = $this->getAccessToken();
+            
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
             ])->post($url, $message);
 
@@ -82,13 +98,33 @@ class FirebaseService
                 ];
             }
 
+            // Get full error details
+            $errorData = $response->json('error');
+            $errorMessage = $errorData['message'] ?? 'Unknown error';
+            $errorCode = $errorData['code'] ?? null;
+            $errorStatus = $errorData['status'] ?? null;
+            
+            Log::warning('FCM send failed', [
+                'status' => $response->status(),
+                'error_message' => $errorMessage,
+                'error_code' => $errorCode,
+                'error_status' => $errorStatus,
+                'full_response' => $response->body(),
+                'token_preview' => substr($fcmToken, 0, 20) . '...'
+            ]);
+
             return [
                 'success' => false,
-                'error' => $response->json('error.message', 'Unknown error'),
+                'error' => $errorMessage,
                 'status' => $response->status(),
+                'error_code' => $errorCode,
             ];
         } catch (\Exception $e) {
-            Log::error('FCM Send Error: ' . $e->getMessage());
+            Log::error('FCM Send Exception', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
             return [
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -104,6 +140,10 @@ class FirebaseService
         $tokens = $user->fcmTokens()->active()->get();
 
         if ($tokens->isEmpty()) {
+            Log::info('No active FCM tokens', [
+                'user_id' => $user->id,
+                'user_name' => $user->name
+            ]);
             return [
                 'success' => false,
                 'error' => 'No active FCM tokens for user',
