@@ -47,6 +47,8 @@
 
                 <form method="POST" action="{{ route('auth.login') }}" class="space-y-5">
                     @csrf
+                    <input type="hidden" name="fcm_token" id="loginFcmToken">
+                    
                     <x-ui.form-input label="Email" type="email" name="email" placeholder="yourname@email.com" icon="email"
                         id="loginEmail" :required="true" value="{{ old('email') }}" />
 
@@ -101,6 +103,8 @@
 
                 <form method="POST" action="/register" class="space-y-5">
                     @csrf
+                    <input type="hidden" name="fcm_token" id="registerFcmToken">
+                    
                     <x-ui.form-input label="Full Name" type="text" name="name" placeholder="John Doe" icon="user" id="fullName"
                         :required="true" value="{{ old('name') }}" />
 
@@ -145,7 +149,43 @@
 @endsection
 
 @section('scripts')
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
     <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "{{ config('services.firebase.api_key') }}",
+            authDomain: "{{ config('services.firebase.auth_domain') }}",
+            projectId: "{{ config('services.firebase.project_id') }}",
+            storageBucket: "{{ config('services.firebase.storage_bucket') }}",
+            messagingSenderId: "{{ config('services.firebase.messaging_sender_id') }}",
+            appId: "{{ config('services.firebase.app_id') }}"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const messaging = firebase.messaging();
+
+            // Request permission and get FCM token
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    messaging.getToken({ vapidKey: "{{ config('services.firebase.vapid_key') }}" })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                document.getElementById('loginFcmToken').value = currentToken;
+                                document.getElementById('registerFcmToken').value = currentToken;
+                                console.log('FCM Token obtained:', currentToken);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log('Unable to get FCM token:', err);
+                        });
+                }
+            });
+        } catch (error) {
+            console.log('Firebase initialization error:', error);
+        }
+
         function switchTab(tab) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');

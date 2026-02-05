@@ -82,7 +82,7 @@ class AppointmentController extends Controller
     public function show(Appointment $appointment)
     {
         $appointment->load(['user', 'pet', 'medicalRecord.createdBy']);
-        
+
         return view('pages.admin.appointments.show', compact('appointment'));
     }
 

@@ -13,6 +13,22 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
+     * Detect device type from User-Agent.
+     */
+    private function getDeviceType(Request $request): string
+    {
+        $userAgent = strtolower($request->header('User-Agent', ''));
+        
+        if (str_contains($userAgent, 'android')) {
+            return 'android';
+        } elseif (str_contains($userAgent, 'iphone') || str_contains($userAgent, 'ipad')) {
+            return 'ios';
+        }
+        
+        return 'web';
+    }
+
+    /**
      * Register a new user.
      *
      * POST /api/auth/register
@@ -23,6 +39,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'fcm_token' => 'nullable|string',
         ]);
 
         $user = User::create([
@@ -30,6 +47,15 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        // Save FCM token if provided
+        if (!empty($validated['fcm_token'])) {
+            $deviceType = $this->getDeviceType($request);
+            $user->fcmTokens()->updateOrCreate(
+                ['token' => $validated['fcm_token']],
+                ['device_type' => $deviceType, 'is_active' => true]
+            );
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -45,6 +71,7 @@ class AuthController extends Controller
                 ],
                 'token' => $token,
                 'token_type' => 'Bearer',
+                'fcm_token' => $validated['fcm_token'] ?? null,
             ]
         ], 201);
     }
@@ -59,6 +86,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+            'fcm_token' => 'nullable|string',
         ]);
 
         $user = User::where('email', $validated['email'])->first();
@@ -68,6 +96,15 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Invalid credentials',
             ], 401);
+        }
+
+        // Save FCM token if provided
+        if (!empty($validated['fcm_token'])) {
+            $deviceType = $this->getDeviceType($request);
+            $user->fcmTokens()->updateOrCreate(
+                ['token' => $validated['fcm_token']],
+                ['device_type' => $deviceType, 'is_active' => true]
+            );
         }
 
         // Revoke previous tokens (optional - for single device login)
@@ -88,6 +125,7 @@ class AuthController extends Controller
                 ],
                 'token' => $token,
                 'token_type' => 'Bearer',
+                'fcm_token' => $validated['fcm_token'] ?? null,
             ]
         ]);
     }

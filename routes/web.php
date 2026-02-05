@@ -118,4 +118,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings/profile', [App\Http\Controllers\Admin\SettingsController::class, 'updateProfile'])->name('settings.update-profile');
     Route::post('/settings/password', [App\Http\Controllers\Admin\SettingsController::class, 'updatePassword'])->name('settings.update-password');
+
+    // Notification Test
+    Route::get('/notification-test', [App\Http\Controllers\Admin\NotificationTestController::class, 'index'])->name('notification-test.index');
+    Route::post('/notification-test/send', [App\Http\Controllers\Admin\NotificationTestController::class, 'send'])->name('notification-test.send');
+    Route::post('/notification-test/broadcast', [App\Http\Controllers\Admin\NotificationTestController::class, 'broadcast'])->name('notification-test.broadcast');
 });

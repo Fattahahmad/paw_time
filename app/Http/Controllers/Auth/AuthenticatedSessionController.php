@@ -28,6 +28,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Save FCM token if provided
+        if (!empty($request->fcm_token)) {
+            auth()->user()->fcmTokens()->updateOrCreate(
+                ['token' => $request->fcm_token],
+                ['device_type' => $request->header('User-Agent') ?? 'web', 'is_active' => true]
+            );
+        }
+
         // Redirect based on user role
         if (auth()->user()->role === 'admin') {
             return redirect()->intended(route('admin.dashboard', absolute: false));

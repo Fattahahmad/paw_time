@@ -33,6 +33,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'fcm_token' => ['nullable', 'string'],
         ]);
 
         $user = User::create([
@@ -40,6 +41,14 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // Save FCM token if provided
+        if (!empty($request->fcm_token)) {
+            $user->fcmTokens()->updateOrCreate(
+                ['token' => $request->fcm_token],
+                ['device_type' => $request->header('User-Agent') ?? 'web', 'is_active' => true]
+            );
+        }
 
         event(new Registered($user));
 
